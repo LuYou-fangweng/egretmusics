@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    /* networkMusicList: [],
+    musicList: [{ name: "live", listMusic: [] }, { name: "network", listMusic: [] }] */
   },
   mutations: {
   },

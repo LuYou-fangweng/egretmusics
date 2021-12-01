@@ -1,14 +1,18 @@
 <template>
   <div id="app">
+    <!-- <div class="back"></div> -->
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">播放器</router-link> |
+      <router-link to="/about">备注</router-link>
     </div>
-    <router-view/>
+    <router-view class="router"/>
   </div>
 </template>
 
 <style>
+.router{
+  margin: 10px auto;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
