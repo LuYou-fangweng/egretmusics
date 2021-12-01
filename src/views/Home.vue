@@ -19,11 +19,14 @@
       <!-- 中间专辑内容 -->
       <div class="center">
         <div class="musicsName">白鹭归庭</div>
+        <div class="albumName">原神游戏原声集</div>
         <div class="artist">陈致逸</div>
-        <AlbumCover class='albumCover'></AlbumCover>
+        <AlbumCover class="albumCover"></AlbumCover>
       </div>
       <!-- 右侧评论区 -->
-      <div class="right"></div>
+      <div class="right">
+        <Comment class="comment"></Comment>
+      </div>
     </div>
     <!-- 底部控制栏 -->
     <div class="footer">
@@ -55,6 +58,7 @@ import ControlButton from '@/components/ControlButton.vue'
 import ControlStrip from '@/components/ControlStrip.vue'
 import GainController from '../components/GainController.vue'
 import AlbumCover from '../components/AlbumCover.vue'
+import Comment from '../components/Comment.vue'
 
 export default {
   name: 'Home',
@@ -64,7 +68,8 @@ export default {
     ControlButton,
     ControlStrip,
     GainController,
-    AlbumCover
+    AlbumCover,
+    Comment
   },
   data () {
     return {}
@@ -75,6 +80,9 @@ export default {
 * {
   border: 0px;
   padding: 0px;
+}
+ul {
+  list-style: none;
 }
 
 .musicBox {
@@ -141,16 +149,21 @@ export default {
 .cainController {
   margin: auto 5px;
 }
-.musicsName{
-  font:700  38px/56px 仿宋,黑体;
-  margin-top: 10px;
+.musicsName {
+  font: 700 38px/56px 仿宋, 黑体;
+  margin-top: 5px;
 }
-.albumCover{
-  margin:0px auto;
-  margin-top: 60px;
+.albumCover {
+  margin: 0px auto;
+  margin-top: 50px;
 }
-.artist{
-   font:400  18px/24px 微软雅黑;
-   color:rgb(139, 139, 139);
+.artist {
+  font: 400 16px/20px 微软雅黑;
+  color: rgb(139, 139, 139);
+}
+.albumName {
+  font: 400 16px/20px 宋体;
+  color: rgb(80, 80, 80);
+  font-style: italic;
 }
 </style>
