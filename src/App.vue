@@ -1,16 +1,19 @@
 <template>
+  
   <div id="app">
     <!-- <div class="back"></div> -->
+    
     <div id="nav">
       <router-link to="/">播放器</router-link> |
       <router-link to="/about">备注</router-link>
     </div>
-    <router-view class="router"/>
+    <router-view class="router" />
   </div>
 </template>
 
+
 <style>
-.router{
+.router {
   margin: 10px auto;
 }
 #app {
@@ -33,4 +36,5 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>

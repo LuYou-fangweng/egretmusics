@@ -1,26 +1,18 @@
 <template>
   <div class="musicList">
     <div class="menu">
-      <div class="network" @click="$_chuangeShowMode(1)">网络</div>
-      <div class="live" @click="$_chuangeShowMode(2)">喜欢</div>
-      <div class="collect" @click="$_chuangeShowMode(3)">收藏</div>
+      <div class="network" @click="$_chuangeShowMode(1)" :class="{'modeActiv':listShowMode===1}">网络</div>
+      <div class="live" @click="$_chuangeShowMode(2)" :class="{'modeActiv':listShowMode===2}">喜欢</div>
+      <div class="collect" @click="$_chuangeShowMode(3)" :class="{'modeActiv':listShowMode===3}">收藏</div>
     </div>
     <div class="list">
       <div class="networkList" v-show="showMode[0]">
         <ul>
-          <li>
+          <li v-for="item in networkMusicList" :key="item.id">
             <img src="@/assets/歌曲图标.svg" class="djbf" />
-            <div class="musicName">白鹭归庭</div>
+            <div class="musicName">{{ item.musicName }}</div>
             <img src="@/assets/SVG.svg" class="video" />
           </li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
         </ul>
       </div>
       <div class="liveList" v-show="showMode[1]"></div>
@@ -35,13 +27,9 @@ export default {
   data () {
     return {
       listShowMode: 1,
-      networkMusicList: [],
-      musicList: [
-        { name: 'live', listMusic: [] },
-        { name: 'network', listMusic: [] }
-      ]
     }
   },
+ 
   computed: {
     showMode: function () {
       let a = []
@@ -53,6 +41,9 @@ export default {
         a = [false, false, true]
       }
       return a
+    },
+    networkMusicList:function(){
+      return this.$store.state.networkMusicList;
     }
   },
   methods: {
@@ -103,7 +94,7 @@ li {
   height: 40px;
   margin: 0px auto;
   line-height: 40px;
-  font-size: 20px;
+  font-size: 16px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -120,5 +111,11 @@ img {
 .musicName {
   margin: 0px auto;
   height: 40px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.modeActiv{
+background-color:rgb(236, 240, 253);
 }
 </style>

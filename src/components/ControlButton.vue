@@ -2,7 +2,7 @@
   <div class="controlButton">
     <div class="playOrder"></div>
     <div class="previous"></div>
-    <div class="play yuan"></div>
+    <div class="play yuan" @click='playNow'></div>
     <div class="next"></div>
     <div class="contentChanges"></div>
   </div>
@@ -15,6 +15,11 @@ export default {
   data () {
     return {
       playState: false
+    }
+  },
+  methods:{
+    playNow:function(){
+      this.$emit('playNow');
     }
   }
 }

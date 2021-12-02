@@ -1,6 +1,9 @@
 <template>
   <!-- 播放器盒子 -->
   <div class="musicBox">
+    <audio id="music" class="musicDom" ref="musicDom">
+      <source :src="musicSrc" type="audio/mp3" />
+    </audio>
     <!-- 播放器头部 -->
     <div class="hearder">
       <!-- logo -->
@@ -21,7 +24,7 @@
         <div class="musicsName">白鹭归庭</div>
         <div class="albumName">原神游戏原声集</div>
         <div class="artist">陈致逸</div>
-        <AlbumCover class="albumCover"></AlbumCover>
+        <AlbumCover class="albumCover" ></AlbumCover>
       </div>
       <!-- 右侧评论区 -->
       <div class="right">
@@ -32,7 +35,7 @@
     <div class="footer">
       <!-- 控制按钮与进度条 -->
       <div class="tool">
-        <ControlButton class="controlButton"></ControlButton>
+        <ControlButton class="controlButton" @playNow="playNow"></ControlButton>
         <ControlStrip class="controlStrip"></ControlStrip>
       </div>
       <!-- 右下按钮功能区 -->
@@ -52,16 +55,16 @@
 
 <script>
 // @ is an alias to /src
-import MusicList from '@/components/MusicList.vue'
-import SearchBox from '@/components/SearchBox.vue'
-import ControlButton from '@/components/ControlButton.vue'
-import ControlStrip from '@/components/ControlStrip.vue'
-import GainController from '../components/GainController.vue'
-import AlbumCover from '../components/AlbumCover.vue'
-import Comment from '../components/Comment.vue'
+import MusicList from "@/components/MusicList.vue";
+import SearchBox from "@/components/SearchBox.vue";
+import ControlButton from "@/components/ControlButton.vue";
+import ControlStrip from "@/components/ControlStrip.vue";
+import GainController from "../components/GainController.vue";
+import AlbumCover from "../components/AlbumCover.vue";
+import Comment from "../components/Comment.vue";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     MusicList,
     SearchBox,
@@ -69,17 +72,75 @@ export default {
     ControlStrip,
     GainController,
     AlbumCover,
-    Comment
+    Comment,
   },
-  data () {
-    return {}
+  data() {
+    return {};
+  },
+  computed: {
+    musicSrc: function () {
+      let src = this.$store.getters.nowMusic.src;
+      if (!src) {
+        src = " ";
+      }
+      return src;
+    },
+  },
+  methods: {
+    // 播放当前焦点歌曲
+    playNow: function () {
+      let musicDom = this.$refs.musicDom;
+      this.$store.state.playState = true;
+      this.$store.state.playState = true;
+      musicDom.load();
+      musicDom.play();
+      console.log("正在尝试播放");
+      this.log();
+    },
+    log: function () {
+      switch (this.$store.state.listMode) {
+        case 1: {
+          console.log(
+            "正在播放的歌曲为：网络歌曲：" + this.$store.state.networkIndex
+          );
+          console.log("路径为：" + this.musicSrc);
+          break;
+        }
+        case 2: {
+          console.log(
+            "正在播放的歌曲为：我的喜欢：" + this.$store.state.myLoveIndex
+          );
+          console.log("路径为：" + this.musicSrc);
+          break;
+        }
+        case 3: {
+          console.log(
+            "正在播放的歌曲为：" +
+              this.$store.state.musicList[this.$store.state.collectionIndex[0]]
+                .name +
+              ":" +
+              this.$store.state.collectionIndex[1]
+          );
+          console.log("路径为：" + this.musicSrc);
+          break;
+        }
+        default:
+          console.log("状态代码出错！");
+      }
+    },
+  },
+  mounted (){
+    
   }
-}
+};
 </script>
 <style>
 * {
   border: 0px;
   padding: 0px;
+}
+.musicDom {
+  display: none;
 }
 ul {
   list-style: none;
