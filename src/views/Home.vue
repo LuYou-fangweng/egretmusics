@@ -164,7 +164,7 @@ export default {
       } else {
         this.$store.state.myLoveIndex = index;
       }
-      this.$store.state.listModel = listMode;
+      this.$store.state.listMode = listMode;
       const musicDom = this.$refs.musicDom;
       musicDom.load();
       musicDom.play();

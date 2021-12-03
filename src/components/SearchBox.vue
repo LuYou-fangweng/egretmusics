@@ -56,7 +56,7 @@ export default {
           });
           searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" });
           them.$store.commit("assignment", searchMusicList);
-          /* console.log(them.$store.state.networkMusicList); */
+          console.log(them.$store.state.networkMusicList);
           
         })
         .catch(function (err) {

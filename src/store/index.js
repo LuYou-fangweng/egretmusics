@@ -18,12 +18,13 @@ export default new Vuex.Store({
     ], */
     // 网络歌曲列表
     networkMusicList: [
-      { id: " ", musicName: " ", album: " ", writer: " ", src: "" },
+      { id: "", musicName: " ", album: " ", writer: " ", src: "" },
     ],
     // 我的喜欢歌曲列表
     myLoveMusicList: [
-      { id: " ", musicName: " ", album: " ", writer: " ", src: "" },
+      { id: "", musicName: " ", album: " ", writer: " ", src: "" },
     ],
+    //我的收藏歌曲列表
     musicList: [{ name: "我的收藏", listMusic: [] }],
 
     inputText: "", //搜索框输入内容
@@ -45,9 +46,19 @@ export default new Vuex.Store({
     ],
   },
   mutations: {
+    //导入网络歌曲列表
     assignment: (state, arr) => {
       state.networkMusicList = arr;
     },
+    //将选定网络歌单添加至我的喜欢歌单
+    addLoveMusic:(state,index)=>{
+      state.myLoveMusicList.push(state.networkMusicList[index])
+    },
+    ////将选定我的喜欢歌曲从列表中删除
+    removeLoveMusic:(state,index)=>{
+      state.myLoveMusicList.splice(index,1);
+    }
+
   },
   actions: {},
   getters: {
@@ -67,6 +78,11 @@ export default new Vuex.Store({
       }
       return a;
     },
+    //返回我的喜欢曲库歌曲ID数组供查重
+    loveID:(state)=>{
+      let ids= state.myLoveMusicList.map(function(item){return item.id});
+      return ids;
+    }
   },
   modules: {},
 });

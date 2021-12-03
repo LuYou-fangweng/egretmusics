@@ -26,8 +26,14 @@
     <div class="list">
       <div class="networkList" v-show="showMode[0]">
         <ul>
-          <li v-for="(item, index) in networkMusicList" :key="item.id">
-            <img src="@/assets/歌曲图标.svg" class="djbf" />
+          <li v-for="(item, index) in networkMusicList" :key="item.id"  >
+            <img
+              src="../assets/已喜欢.svg"
+              class="addLove"
+              @click="$_addLoveMusic(index)"
+              :class="{'loveActive':$_queryID(item.id)}"
+            />
+             
             <div
               class="musicName"
               :class="{ musicNameActive: index === $store.state.networkIndex }"
@@ -39,7 +45,29 @@
           </li>
         </ul>
       </div>
-      <div class="liveList" v-show="showMode[1]"></div>
+      <!-- 我的喜欢歌单 -->
+      <div class="loveList" v-show="showMode[1]">
+        <ul>
+          <li
+            v-for="(item, index) in this.$store.state.myLoveMusicList"
+            :key="item.id"
+          >
+            <img
+              src="../assets/删除.svg"
+              class="delet"
+              @click="$_removeLoveMusic(index)"
+            />
+            <div
+              class="musicName"
+              :class="{ musicNameActive: index === $store.state.myLoveIndex }"
+              @click="$listeners.playThis(2, index)"
+            >
+              {{ item.musicName }}
+            </div>
+            <img src="@/assets/SVG.svg" class="video" @click="$_queryID"/>
+          </li>
+        </ul>
+      </div>
       <div class="collectList" v-show="showMode[2]"></div>
     </div>
   </div>
@@ -71,9 +99,20 @@ export default {
     },
   },
   methods: {
+    // 改变列表模式序号
     $_chuangeShowMode: function (value) {
       this.listShowMode = value;
     },
+    // 将选定网络歌单添加至我的喜欢歌单
+    $_addLoveMusic: function (index) {
+      this.$store.commit("addLoveMusic", index);
+    },
+    $_removeLoveMusic: function (index) {
+      this.$store.commit("removeLoveMusic", index);
+    },
+    $_queryID:function(id){
+      return this.$store.getters.loveID.includes(id);
+    }
   },
 };
 </script>
@@ -122,16 +161,16 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
 }
-.networkList ul {
+.list ul {
   margin: 0px;
 }
 .networkList li:nth-child(2n + 1),
-.liveList li:nth-child(2n + 1) {
+.loveList li:nth-child(2n + 1) {
   background-color: rgb(222, 235, 247);
 }
 
 .networkList li:first-child,
-.liveList li:first-child {
+.loveList li:first-child {
   display: none;
 }
 
@@ -152,5 +191,18 @@ img {
 }
 .modeActiv {
   background-color: rgb(236, 240, 253);
+}
+.delet,
+.addLove {
+  visibility: hidden; 
+  opacity: 0.4;
+}
+.loveList li:hover .delet,
+.networkList li:hover .addLove {
+  visibility: visible;
+}
+.loveActive {
+  visibility: visible;
+  opacity: 1;
 }
 </style>
