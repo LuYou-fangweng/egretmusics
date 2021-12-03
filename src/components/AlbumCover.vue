@@ -1,31 +1,34 @@
-<template >
+<template>
   <div class="albumCover">
     <div
       class="record"
-      :class="{ recordActive: playStare === true }"
+      :class="{ recordActive: $store.state.playState === true }"
       @click="$_changeMode"
     >
       <div class="cover"></div>
     </div>
-    <div class="probe" :class="{ probeActive: playStare === true }"></div>
+    <div
+      class="probe"
+      :class="{ probeActive: $store.state.playState === true }"
+    ></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AlbumCover',
+  name: "AlbumCover",
   props: {},
-  data () {
+  data() {
     return {
-      playStare: false
-    }
+      // playStare: false 测试状态用数据
+    };
   },
   methods: {
     $_changeMode: function () {
-      this.playStare = !this.playStare
-    }
-  }
-}
+      this.playStare = !this.playStare;
+    },
+  },
+};
 </script>
 <style scoped>
 .albumCover {
@@ -45,7 +48,7 @@ export default {
   /* box-shadow: 3px 3px 4px 2px rgba(92, 92, 92, 0.664); */
   animation: rotateMove 18s infinite linear;
   animation-fill-mode: forwards;
-  animation-play-state:paused;
+  animation-play-state: paused;
 }
 .cover {
   width: 180px;
@@ -81,6 +84,6 @@ export default {
   }
 }
 .recordActive {
-  animation-play-state:running;
+  animation-play-state: running;
 }
 </style>

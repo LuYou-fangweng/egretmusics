@@ -9,6 +9,7 @@ export default new Vuex.Store({
         id: "",
         musicName: "", // 歌名
         albumName: "", // 专辑名
+        writer:"",// 艺术家
         src: "", // 歌曲地址
         coverSrc: "", // 封面地址
         MV: "", // 是否有MV
@@ -17,10 +18,12 @@ export default new Vuex.Store({
     ], */
     // 网络歌曲列表
     networkMusicList: [
-      { id: "", musicName: "", album: "", writer: "", src: "" },
+      { id: " ", musicName: " ", album: " ", writer: " ", src: "" },
     ],
     // 我的喜欢歌曲列表
-    myLoveMusicList: [],
+    myLoveMusicList: [
+      { id: " ", musicName: " ", album: " ", writer: " ", src: "" },
+    ],
     musicList: [{ name: "我的收藏", listMusic: [] }],
 
     inputText: "", //搜索框输入内容

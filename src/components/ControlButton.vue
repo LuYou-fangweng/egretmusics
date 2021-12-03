@@ -1,28 +1,33 @@
 <template>
   <div class="controlButton">
     <div class="playOrder"></div>
-    <div class="previous"></div>
-    <div class="play yuan" @click='playNow'></div>
-    <div class="next"></div>
+    <div class="previous" @click="$listeners.prev()"></div>
+    <div
+      class="play yuan"
+      :class="{'playActive':$store.state.playState==true}"
+      @click="$listeners.playNow()"
+    ></div>
+    <div class="next" @click="$listeners.next()"></div>
     <div class="contentChanges"></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ControlButton',
+  name: "ControlButton",
   props: {},
-  data () {
+  data() {
     return {
-      playState: false
-    }
+      playState: false,
+    };
   },
-  methods:{
-    playNow:function(){
-      this.$emit('playNow');
-    }
-  }
-}
+  methods: {
+    /* playNow: function () {
+      this.$listeners.playNow();
+      // this.$emit("playNow");
+    }, */
+  },
+};
 </script>
 
 <style scoped>
@@ -48,6 +53,11 @@ export default {
   height: 58px;
   width: 58px;
   background: url("../assets/播放.svg");
+}
+.playActive {
+  height: 58px;
+  width: 58px;
+  background: url("../assets/暂停.svg");
 }
 .play:hover {
   background-color: rgb(211, 211, 211);

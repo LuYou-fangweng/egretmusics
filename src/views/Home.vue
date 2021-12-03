@@ -17,14 +17,14 @@
       <!-- 左侧列表 -->
       <div class="left">
         <!-- 左侧列表组件 -->
-        <MusicList></MusicList>
+        <MusicList @playThis="playThis"></MusicList>
       </div>
       <!-- 中间专辑内容 -->
       <div class="center">
-        <div class="musicsName">白鹭归庭</div>
-        <div class="albumName">原神游戏原声集</div>
-        <div class="artist">陈致逸</div>
-        <AlbumCover class="albumCover" ></AlbumCover>
+        <div class="musicsName">{{ musicName }}</div>
+        <div class="albumName">{{ album }}</div>
+        <div class="artist">{{ writer }}</div>
+        <AlbumCover class="albumCover"></AlbumCover>
       </div>
       <!-- 右侧评论区 -->
       <div class="right">
@@ -35,7 +35,13 @@
     <div class="footer">
       <!-- 控制按钮与进度条 -->
       <div class="tool">
-        <ControlButton class="controlButton" @playNow="playNow"></ControlButton>
+        <ControlButton
+          class="controlButton"
+          @playNow="playNow"
+          @next="next"
+          @prev="prev"
+          @playThis="playThis"
+        ></ControlButton>
         <ControlStrip class="controlStrip"></ControlStrip>
       </div>
       <!-- 右下按钮功能区 -->
@@ -77,26 +83,95 @@ export default {
   data() {
     return {};
   },
+  watch: {
+    // musicSrc() {
+    //   let musicDom = this.$refs.musicDom;
+    //   musicDom.load();
+    // },
+  },
   computed: {
     musicSrc: function () {
       let src = this.$store.getters.nowMusic.src;
-      if (!src) {
-        src = " ";
-      }
       return src;
+    },
+    musicName: function () {
+      let musicName = this.$store.getters.nowMusic.musicName;
+      return musicName;
+    },
+    album: function () {
+      let album = this.$store.getters.nowMusic.album;
+      return album;
+    },
+    writer: function () {
+      let writer = this.$store.getters.nowMusic.writer;
+      return writer;
     },
   },
   methods: {
-    // 播放当前焦点歌曲
+    // 播放或暂停当前焦点歌曲
     playNow: function () {
-      let musicDom = this.$refs.musicDom;
-      this.$store.state.playState = true;
-      this.$store.state.playState = true;
+      const musicDom = this.$refs.musicDom;
+      if (this.$store.state.playState == false) {
+        this.$store.state.playState = true;
+        /* musicDom.load(); */
+        musicDom.play();
+        /* console.log("正在尝试播放"); */
+        this.log();
+      } else {
+        this.$store.state.playState = false;
+        musicDom.pause();
+      }
+    },
+    //下一首
+    next: function () {
+      if (this.$store.state.listMode === 1) {
+        this.$store.state.networkIndex++;
+      }
+      if (this.$store.state.listMode === 2) {
+        this.$store.state.myLoveIndex++;
+      }
+      if (this.$store.state.listMode === 3) {
+        // this.$store.state.collectionIndex[1]++;
+      }
+      const musicDom = this.$refs.musicDom;
       musicDom.load();
       musicDom.play();
-      console.log("正在尝试播放");
+      this.$store.state.playState = true;
       this.log();
     },
+
+    //上一首
+    prev: function () {
+      if (this.$store.state.listMode === 1) {
+        this.$store.state.networkIndex--;
+      }
+      if (this.$store.state.listMode === 2) {
+        this.$store.state.myLoveIndex--;
+      }
+      if (this.$store.state.listMode === 3) {
+        // this.$store.state.collectionIndex[1]--;
+      }
+      const musicDom = this.$refs.musicDom;
+      musicDom.load();
+      musicDom.play();
+      this.$store.state.playState = true;
+      this.log();
+    },
+    //播放选定库曲目(网络与本地)
+    playThis: function (listMode, index) {
+      if (listMode === 1) {
+        this.$store.state.networkIndex = index;
+      } else {
+        this.$store.state.myLoveIndex = index;
+      }
+      this.$store.state.listModel = listMode;
+      const musicDom = this.$refs.musicDom;
+      musicDom.load();
+      musicDom.play();
+      this.$store.state.playState = true;
+      this.log();
+    },
+
     log: function () {
       switch (this.$store.state.listMode) {
         case 1: {
@@ -129,9 +204,7 @@ export default {
       }
     },
   },
-  mounted (){
-    
-  }
+  mounted() {},
 };
 </script>
 <style>
@@ -154,7 +227,13 @@ ul {
   height: 620px;
   box-shadow: 0px 0px 3px 3px rgba(119, 119, 119, 0.527);
   border-radius: 5px;
-  background-color: #f7f7f7;
+  background-image: linear-gradient(
+    to bottom,
+    #f2f7fc 0%,
+    #f2f7fc 20%,
+    #f7f7f7 32%,
+    #f7f7f7 100%
+  );
 }
 .Logo {
   float: left;
@@ -211,18 +290,24 @@ ul {
   margin: auto 5px;
 }
 .musicsName {
+  height: 56px;
   font: 700 38px/56px 仿宋, 黑体;
   margin-top: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .albumCover {
   margin: 0px auto;
   margin-top: 50px;
 }
 .artist {
+  height: 20px;
   font: 400 16px/20px 微软雅黑;
   color: rgb(139, 139, 139);
 }
 .albumName {
+  height: 20px;
   font: 400 16px/20px 宋体;
   color: rgb(80, 80, 80);
   font-style: italic;

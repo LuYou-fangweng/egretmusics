@@ -47,8 +47,8 @@ export default {
   box-shadow: 2px 2px 2px 2px rgba(172, 172, 172, 0.349);
   background-color: #f7f7f7;
 }
-.gainController:hover .audio{
-  display:block;
+.gainController:hover .audio {
+  display: block;
 }
 .audioLine {
   position: absolute;

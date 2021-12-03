@@ -1,16 +1,40 @@
 <template>
   <div class="musicList">
     <div class="menu">
-      <div class="network" @click="$_chuangeShowMode(1)" :class="{'modeActiv':listShowMode===1}">网络</div>
-      <div class="live" @click="$_chuangeShowMode(2)" :class="{'modeActiv':listShowMode===2}">喜欢</div>
-      <div class="collect" @click="$_chuangeShowMode(3)" :class="{'modeActiv':listShowMode===3}">收藏</div>
+      <div
+        class="network"
+        @click="$_chuangeShowMode(1)"
+        :class="{ modeActiv: listShowMode === 1 }"
+      >
+        网络
+      </div>
+      <div
+        class="live"
+        @click="$_chuangeShowMode(2)"
+        :class="{ modeActiv: listShowMode === 2 }"
+      >
+        喜欢
+      </div>
+      <div
+        class="collect"
+        @click="$_chuangeShowMode(3)"
+        :class="{ modeActiv: listShowMode === 3 }"
+      >
+        收藏
+      </div>
     </div>
     <div class="list">
       <div class="networkList" v-show="showMode[0]">
         <ul>
-          <li v-for="item in networkMusicList" :key="item.id">
+          <li v-for="(item, index) in networkMusicList" :key="item.id">
             <img src="@/assets/歌曲图标.svg" class="djbf" />
-            <div class="musicName">{{ item.musicName }}</div>
+            <div
+              class="musicName"
+              :class="{ musicNameActive: index === $store.state.networkIndex }"
+              @click="$listeners.playThis(1, index)"
+            >
+              {{ item.musicName }}
+            </div>
             <img src="@/assets/SVG.svg" class="video" />
           </li>
         </ul>
@@ -22,36 +46,36 @@
 </template>
 <script>
 export default {
-  name: 'musicList',
+  name: "musicList",
   props: {},
-  data () {
+  data() {
     return {
       listShowMode: 1,
-    }
+    };
   },
- 
+
   computed: {
     showMode: function () {
-      let a = []
+      let a = [];
       if (this.listShowMode === 1) {
-        a = [true, false, false]
+        a = [true, false, false];
       } else if (this.listShowMode === 2) {
-        a = [false, true, false]
+        a = [false, true, false];
       } else {
-        a = [false, false, true]
+        a = [false, false, true];
       }
-      return a
+      return a;
     },
-    networkMusicList:function(){
+    networkMusicList: function () {
       return this.$store.state.networkMusicList;
-    }
+    },
   },
   methods: {
     $_chuangeShowMode: function (value) {
-      this.listShowMode = value
-    }
-  }
-}
+      this.listShowMode = value;
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -89,7 +113,7 @@ export default {
 .list > div::-webkit-scrollbar {
   display: none;
 }
-li {
+.list li {
   display: flex;
   height: 40px;
   margin: 0px auto;
@@ -98,9 +122,17 @@ li {
   padding-left: 5px;
   padding-right: 5px;
 }
+.networkList ul {
+  margin: 0px;
+}
 .networkList li:nth-child(2n + 1),
 .liveList li:nth-child(2n + 1) {
   background-color: rgb(222, 235, 247);
+}
+
+.networkList li:first-child,
+.liveList li:first-child {
+  display: none;
 }
 
 img {
@@ -115,7 +147,10 @@ img {
   overflow: hidden;
   white-space: nowrap;
 }
-.modeActiv{
-background-color:rgb(236, 240, 253);
+.musicNameActive {
+  color: rgb(36, 108, 190);
+}
+.modeActiv {
+  background-color: rgb(236, 240, 253);
 }
 </style>

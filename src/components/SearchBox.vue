@@ -43,6 +43,7 @@ export default {
           // 对返回数据进行提取，选取ID、歌名、专辑、作者、URL信息。S
           /* let t= response.data.result.songs;
           console.log(t); */
+
           const searchMusicList = response.data.result.songs.map((item) => {
             const { name: musicName, id, artists, album } = item;
             return {
@@ -53,8 +54,10 @@ export default {
               src: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
             };
           });
+          searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" });
           them.$store.commit("assignment", searchMusicList);
           /* console.log(them.$store.state.networkMusicList); */
+          
         })
         .catch(function (err) {
           console.log("网络请求出错！错误详情为：");
