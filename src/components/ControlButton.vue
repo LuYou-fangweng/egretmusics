@@ -1,13 +1,13 @@
 <template>
   <div class="controlButton">
     <div class="playOrder"></div>
-    <div class="previous" @click="$listeners.prev()"></div>
+    <div class="previous" @click="prev"></div>
     <div
       class="play yuan"
-      :class="{'playActive':$store.state.playState==true}"
+      :class="{ playActive: $store.state.playState == true }"
       @click="$listeners.playNow()"
     ></div>
-    <div class="next" @click="$listeners.next()"></div>
+    <div class="next" @click="next"></div>
     <div class="contentChanges"></div>
   </div>
 </template>
@@ -22,10 +22,16 @@ export default {
     };
   },
   methods: {
-    /* playNow: function () {
-      this.$listeners.playNow();
-      // this.$emit("playNow");
-    }, */
+    prev: function () {
+      if (this.$store.getters.nowIndex > 1) {
+        this.$listeners.prev();
+      }
+    },
+    next: function () {
+      if (this.$store.getters.nowIndex < this.$store.getters.nowLength - 1) {
+        this.$listeners.next();
+      }
+    },
   },
 };
 </script>

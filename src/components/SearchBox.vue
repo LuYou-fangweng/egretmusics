@@ -19,11 +19,11 @@ export default {
     return { searchText: "" };
   },
   watch: {
+    //监听输入框内容，输入框清空时清空网络歌单列表，并重置歌单播放焦点为0
     searchText: function (val, oldVal) {
       if (val === "") {
-        this.$store.state.networkMusicList = [
-          { id: "", musicName: "", album: "", writer: "", src: "" },
-        ];
+       this.$store.commit("clearNetworkMusicList")
+       this.$store.commit("changeNetWorkIndex",0)
       }
     },
   },
@@ -56,7 +56,9 @@ export default {
           });
           searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" });
           them.$store.commit("assignment", searchMusicList);
-          console.log(them.$store.state.networkMusicList);
+          /* console.log(them.$store.state.networkMusicList); */
+          //将网络歌单焦点设置为1
+          them.$store.commit("changeNetWorkIndex",1);
           
         })
         .catch(function (err) {

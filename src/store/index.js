@@ -54,11 +54,28 @@ export default new Vuex.Store({
     addLoveMusic:(state,index)=>{
       state.myLoveMusicList.push(state.networkMusicList[index])
     },
-    ////将选定我的喜欢歌曲从列表中删除
+    //将选定我的喜欢歌曲从列表中删除
     removeLoveMusic:(state,index)=>{
       state.myLoveMusicList.splice(index,1);
+    },
+     //我的喜欢歌单焦点序号+1
+     addLoveIndex:function(state){
+      state.myLoveIndex++
+     },
+    //我的喜欢歌单焦点序号-1
+    reduceLoveIndex:function(state){
+     state.myLoveIndex--
+    },
+    //清空网络歌曲列表
+    clearNetworkMusicList:function(state){
+        state.networkMusicList = [
+        { id: "", musicName: "", album: "", writer: "", src: "" },
+      ];
+    },
+    //重置网络歌单焦点至特定序号
+    changeNetWorkIndex:function(state,index){
+      state.networkIndex=index;
     }
-
   },
   actions: {},
   getters: {
@@ -82,6 +99,26 @@ export default new Vuex.Store({
     loveID:(state)=>{
       let ids= state.myLoveMusicList.map(function(item){return item.id});
       return ids;
+    },
+    //我的喜欢曲库歌曲数量（含开头空列表）
+    loveListLength:function(state){
+      let l=state.myLoveMusicList.length-1;
+      return l;
+    },
+    //当前歌单模式列表长度
+    nowLength:function(state){
+      switch(state.listMode){
+        case 1:return state.networkMusicList.length;
+        case 2:return state.myLoveMusicList.length;
+      }
+
+    },
+    //当前焦点歌曲序号
+    nowIndex:function(state){
+      switch(state.listMode){
+        case 1:return state.networkIndex;
+        case 2:return state.myLoveIndex;
+      }
     }
   },
   modules: {},

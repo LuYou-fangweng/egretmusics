@@ -26,14 +26,14 @@
     <div class="list">
       <div class="networkList" v-show="showMode[0]">
         <ul>
-          <li v-for="(item, index) in networkMusicList" :key="item.id"  >
+          <li v-for="(item, index) in networkMusicList" :key="item.id">
             <img
               src="../assets/已喜欢.svg"
               class="addLove"
-              @click="$_addLoveMusic(index)"
-              :class="{'loveActive':$_queryID(item.id)}"
+              @click="$_addLoveMusic(index, item.id)"
+              :class="{ loveActive: $_queryID(item.id) }"
             />
-             
+
             <div
               class="musicName"
               :class="{ musicNameActive: index === $store.state.networkIndex }"
@@ -64,7 +64,7 @@
             >
               {{ item.musicName }}
             </div>
-            <img src="@/assets/SVG.svg" class="video" @click="$_queryID"/>
+            <img src="@/assets/SVG.svg" class="video" @click="$_queryID" />
           </li>
         </ul>
       </div>
@@ -104,15 +104,41 @@ export default {
       this.listShowMode = value;
     },
     // 将选定网络歌单添加至我的喜欢歌单
-    $_addLoveMusic: function (index) {
-      this.$store.commit("addLoveMusic", index);
+    $_addLoveMusic: function (index, id) {
+      if (!this.$_queryID(id)) {
+        this.$store.commit("addLoveMusic", index);
+      } else {
+        console.log("本歌曲已经添加至“我的喜欢”！请勿重复添加！");
+      }
+      /* if((index===this.$store.state.myLoveIndex)&&(index===this.$store.getters.loveListLength)){
+        this.$store.commit("reduceLoveIndex");
+      } */
     },
+    //移除我的喜欢曲库中选定歌曲
     $_removeLoveMusic: function (index) {
+      //根据删除歌曲与歌曲焦点的位置判断焦点的移动规则
+      if (index < this.$store.state.myLoveIndex) {
+        this.$store.commit("reduceLoveIndex");
+        this.$store.commit("removeLoveMusic", index);
+        return;
+      }
+      if (index === this.$store.state.myLoveIndex) {
+        if (index === this.$store.getters.loveListLength) {
+          this.$store.commit("reduceLoveIndex");
+          this.$listeners.resetSrc();
+          this.$store.commit("removeLoveMusic", index);
+          return;
+        }
+        this.$store.commit("removeLoveMusic", index);
+        this.$listeners.resetSrc();
+        return;
+      }
       this.$store.commit("removeLoveMusic", index);
     },
-    $_queryID:function(id){
+    //查询ID是否我的喜欢曲库中
+    $_queryID: function (id) {
       return this.$store.getters.loveID.includes(id);
-    }
+    },
   },
 };
 </script>
@@ -194,7 +220,7 @@ img {
 }
 .delet,
 .addLove {
-  visibility: hidden; 
+  visibility: hidden;
   opacity: 0.4;
 }
 .loveList li:hover .delet,

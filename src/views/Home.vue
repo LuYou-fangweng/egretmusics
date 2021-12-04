@@ -17,7 +17,7 @@
       <!-- 左侧列表 -->
       <div class="left">
         <!-- 左侧列表组件 -->
-        <MusicList @playThis="playThis"></MusicList>
+        <MusicList @playThis="playThis" @resetSrc="resetSrc"></MusicList>
       </div>
       <!-- 中间专辑内容 -->
       <div class="center">
@@ -171,6 +171,13 @@ export default {
       this.$store.state.playState = true;
       this.log();
     },
+    //删除当前播放歌曲时暂停播放并重载SRC
+    resetSrc:function(){
+      const musicDom = this.$refs.musicDom;
+      musicDom.pause();
+      this.$store.state.playState = false;
+      musicDom.load();
+    },
 
     log: function () {
       switch (this.$store.state.listMode) {
@@ -270,7 +277,7 @@ ul {
 }
 
 .controlButton {
-  margin-left: 395px;
+  margin-left: 405px;
 }
 .controlStrip {
   margin-left: 160px;
