@@ -35,6 +35,9 @@ export default new Vuex.Store({
     myLoveIndex: 0, //我的喜欢歌单当前序号
     collectionIndex: [0, 0], //收藏歌单当前歌单号、序号
     playMode: 1, //1：顺序循环 2：单曲循环  3：随机
+    musicLength:0,//歌曲时间长度
+    nusicTime:0,//歌曲播放进度
+    volume:0,//歌曲音量
 
     // 评论区信息
     comment: [
@@ -75,6 +78,18 @@ export default new Vuex.Store({
     //重置网络歌单焦点至特定序号
     changeNetWorkIndex:function(state,index){
       state.networkIndex=index;
+    },
+    //改变歌曲总长度
+    chuangeMusicLength:function(state,value){
+      state.musicLength=value;
+    },
+    //改变当前歌曲播放进度数字
+    chuangenusicTime:function(state,value){
+      state.nusicTime=value;
+    },
+    //改变音量
+    chuangeVolume:function(state,value){
+      state.volume=value;
     }
   },
   actions: {},

@@ -9,7 +9,7 @@
       <!-- logo -->
       <div class="Logo">白鹭播放器</div>
       <!-- 搜索框组件 -->
-      <SearchBox></SearchBox>
+      <SearchBox @changeSRC="changeSRC"></SearchBox>
       <div class="a"></div>
     </div>
     <!-- 播放器中部内容 -->
@@ -42,7 +42,10 @@
           @prev="prev"
           @playThis="playThis"
         ></ControlButton>
-        <ControlStrip class="controlStrip"></ControlStrip>
+        <ControlStrip
+          class="controlStrip"
+          @changeTime="changeTime"
+        ></ControlStrip>
       </div>
       <!-- 右下按钮功能区 -->
       <div class="bottombar">
@@ -53,7 +56,7 @@
         <!-- 下载该歌曲 -->
         <img class="download" src="../assets/下载.svg" alt="下载" />
         <!-- 音量组件 -->
-        <GainController class="cainController"></GainController>
+        <GainController class="cainController" @audioTb="audioTb"></GainController>
       </div>
     </div>
   </div>
@@ -108,6 +111,19 @@ export default {
     },
   },
   methods: {
+    //更新audio标签的音量与音量数据同步
+    audioTb:function(){
+    const musicDom = this.$refs.musicDom; //导入audio标签
+    //音量数据改变时触发实时修改播放器音量
+    musicDom.volume=this.$store.state.volume;
+    },
+
+    //获取鼠标点击进度条事件，改变歌曲播放进度
+    changeTime: function (e) {
+      const musicDom = this.$refs.musicDom;
+      let x = (e.offsetX / 550) * this.$store.state.musicLength;
+      musicDom.currentTime = x;
+    },
     // 播放或暂停当前焦点歌曲
     playNow: function () {
       const musicDom = this.$refs.musicDom;
@@ -172,13 +188,17 @@ export default {
       this.log();
     },
     //删除当前播放歌曲时暂停播放并重载SRC
-    resetSrc:function(){
+    resetSrc: function () {
       const musicDom = this.$refs.musicDom;
       musicDom.pause();
       this.$store.state.playState = false;
       musicDom.load();
     },
-
+    //重载播放器SRC
+    changeSRC: function () {
+      const musicDom = this.$refs.musicDom;
+      musicDom.load();
+    },
     log: function () {
       switch (this.$store.state.listMode) {
         case 1: {
@@ -210,8 +230,33 @@ export default {
           console.log("状态代码出错！");
       }
     },
+    chuangeVolume:function(value){
+      this.$store.commit("chuangeVolume",value);
+    },
   },
-  mounted() {},
+
+  crearte: function () {},
+  beforeMount: function () {
+    //在视图渲染前，将硬盘中的歌单写入musicList中；
+    // this.musicList = JSON.parse(window.localStorage.getItem("musicList"));
+  },
+  mounted: function () {
+    const musicDom = this.$refs.musicDom; //导入audio标签
+    //设置初始状态音量
+    this.chuangeVolume(0.8);
+    musicDom.volume = this.$store.state.volume;
+    //audio标签重载SRC时，返回歌曲总长度
+    musicDom.onloadedmetadata = () => {
+      this.$store.commit("chuangeMusicLength", parseInt(musicDom.duration));
+    };
+    //audio标签重每秒更新播放进度
+    musicDom.ontimeupdate = () => {
+      this.$store.commit("chuangenusicTime", parseInt(musicDom.currentTime));
+    };
+  },
+  beforeUpdate: function () {
+    
+  },
 };
 </script>
 <style>

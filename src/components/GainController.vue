@@ -1,20 +1,67 @@
 <template>
   <div class="gainController">
     <img src="../assets/音量.svg" alt="音量" class="valume" />
-    <div class="number">100%</div>
+    <div class="number">{{ parseInt($store.state.volume * 100) }}%</div>
     <div class="audio">
+      <div class="audioLine_c" ref="audioLine_c"></div>
       <div class="audioLine"></div>
-      <div class="audioLine_c"></div>
-      <div class="audioCircle"></div>
+      <div
+        class="audioCircle"
+        ref="audioCircle"
+        @mousedown="move($event)"
+      ></div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'GainController',
-  props: {}
-}
+  name: "GainController",
+  props: {},
+  beforeUpdate: function () {
+    const audioLine_c = this.$refs.audioLine_c;
+    const audioCircle = this.$refs.audioCircle;
+    let h = this.$store.state.volume * 100;
+    audioLine_c.style.height = h + "px";
+    audioCircle.style.marginBottom = h + "px";
+  },
+  methods: {
+    //拖拽音量控制球，改变印象
+    move: function (e) {
+      let odiv = e.target;
+      let xdY = e.offsetY;
+
+      //求出零点Y坐标
+      let oldV =
+        e.clientY -
+        xdY +
+        odiv.style.height * 0.5 +
+        (120 - 16 - odiv.offsetTop - odiv.style.height) -
+        2;
+
+      document.onmousemove = (e) => {
+        //求出新确定点Y坐标
+        let newV = e.clientY - xdY + odiv.style.height * 0.5;
+
+        //相减得到小球最后位置相对零点距离，以此求出对应音量
+        let dy = oldV - newV;
+        if (dy < 0) {
+          dy = 0;
+        } else if (dy > 100) {
+          dy = 100;
+        }
+
+        let volume = dy / 100;
+        this.$store.commit("chuangeVolume", volume);
+        this.$emit("audioTb");
+      };
+      document.onmouseup = () => {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    },
+  },
+};
 </script>
 <style scoped>
 .gainController {
@@ -41,36 +88,39 @@ export default {
   position: relative;
   top: -100px;
   left: -80px;
-  width: 30px;
+  width: 20px;
   height: 120px;
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 2px 2px 2px 2px rgba(172, 172, 172, 0.349);
   background-color: #f7f7f7;
 }
 .gainController:hover .audio {
   display: block;
 }
+.audio:active {
+  display: block;
+}
 .audioLine {
   position: absolute;
-  bottom: 15px;
+  bottom: 10px;
   width: 4px;
-  height: 90px;
+  height: 100px;
   background-color: rgba(131, 131, 153, 0.452);
   left: 50%;
   transform: translate(-50%);
 }
 .audioLine_c {
   position: absolute;
-  bottom: 15px;
+  bottom: 10px;
   width: 4px;
-  height: 20px;
+  height: 0px;
   background-color: rgb(65, 65, 75);
   left: 50%;
   transform: translate(-50%);
 }
 .audioCircle {
   position: absolute;
-  bottom: 7px;
+  bottom: 2px;
   width: 16px;
   height: 16px;
   border-radius: 50%;

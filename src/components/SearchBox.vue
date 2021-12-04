@@ -59,7 +59,7 @@ export default {
           /* console.log(them.$store.state.networkMusicList); */
           //将网络歌单焦点设置为1
           them.$store.commit("changeNetWorkIndex",1);
-          
+          them.$emit("changeSRC");
         })
         .catch(function (err) {
           console.log("网络请求出错！错误详情为：");
