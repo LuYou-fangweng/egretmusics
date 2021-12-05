@@ -56,9 +56,13 @@
         <!-- 下载该歌曲 -->
         <img class="download" src="../assets/下载.svg" alt="下载" />
         <!-- 音量组件 -->
-        <GainController class="cainController" @audioTb="audioTb"></GainController>
+        <GainController
+          class="cainController"
+          @audioTb="audioTb"
+        ></GainController>
       </div>
     </div>
+    <MusicCollection class='musicCollection'></MusicCollection>
   </div>
 </template>
 
@@ -71,6 +75,7 @@ import ControlStrip from "@/components/ControlStrip.vue";
 import GainController from "../components/GainController.vue";
 import AlbumCover from "../components/AlbumCover.vue";
 import Comment from "../components/Comment.vue";
+import MusicCollection from "../components/MusicCollection.vue";
 
 export default {
   name: "Home",
@@ -82,6 +87,7 @@ export default {
     GainController,
     AlbumCover,
     Comment,
+    MusicCollection,
   },
   data() {
     return {};
@@ -112,10 +118,10 @@ export default {
   },
   methods: {
     //更新audio标签的音量与音量数据同步
-    audioTb:function(){
-    const musicDom = this.$refs.musicDom; //导入audio标签
-    //音量数据改变时触发实时修改播放器音量
-    musicDom.volume=this.$store.state.volume;
+    audioTb: function () {
+      const musicDom = this.$refs.musicDom; //导入audio标签
+      //音量数据改变时触发实时修改播放器音量
+      musicDom.volume = this.$store.state.volume;
     },
 
     //获取鼠标点击进度条事件，改变歌曲播放进度
@@ -230,8 +236,8 @@ export default {
           console.log("状态代码出错！");
       }
     },
-    chuangeVolume:function(value){
-      this.$store.commit("chuangeVolume",value);
+    chuangeVolume: function (value) {
+      this.$store.commit("chuangeVolume", value);
     },
   },
 
@@ -243,9 +249,9 @@ export default {
   mounted: function () {
     const musicDom = this.$refs.musicDom; //导入audio标签
     //设置初始状态音量
-    this.chuangeVolume(0.8);
+    this.chuangeVolume(0.45);
     musicDom.volume = this.$store.state.volume;
-    //audio标签重载SRC时，返回歌曲总长度
+    //audio标签重载SRC时，返回歌曲总时长
     musicDom.onloadedmetadata = () => {
       this.$store.commit("chuangeMusicLength", parseInt(musicDom.duration));
     };
@@ -254,9 +260,7 @@ export default {
       this.$store.commit("chuangenusicTime", parseInt(musicDom.currentTime));
     };
   },
-  beforeUpdate: function () {
-    
-  },
+  beforeUpdate: function () {},
 };
 </script>
 <style>
@@ -272,6 +276,7 @@ ul {
 }
 
 .musicBox {
+  position: relative;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
@@ -363,5 +368,11 @@ ul {
   font: 400 16px/20px 宋体;
   color: rgb(80, 80, 80);
   font-style: italic;
+}
+.musicCollection{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
 }
 </style>
