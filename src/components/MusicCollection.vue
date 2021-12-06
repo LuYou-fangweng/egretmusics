@@ -2,19 +2,26 @@
   <div class="musicCollection">
     <div class="collectionHeader">
       <div class="headerText">收藏至歌单</div>
-      <div class="close"></div>
+      <div class="close" @click="$_notShowBox"></div>
     </div>
     <div class="addNewList">
-      <div class="img add"></div>
-      <input type="text" placeholder="新建歌单" class="inputText" />
+      <div class="img add" @click="$_addMusics"></div>
+      <input
+        type="text"
+        v-model="musicListName"
+        @keyup.enter="$_addMusics"
+        placeholder="新建歌单"
+        class="inputText"
+      />
     </div>
     <div class="addMyLove">
-      <div class="img love"></div>
-      <div class="_box">我的喜欢</div>
+      <div class="img love" @click="$_addLoveList"></div>
+      <div class="_box" @click="$_addLoveList">我的喜欢</div>
     </div>
-    <div class="mowLists">
+    <div class="nowLists">
       <ul>
         <li
+          @click="$_addMusicList(index)"
           class="listName _box"
           v-for="(item, index) of this.$store.state.musicList"
           :key="index"
@@ -31,9 +38,55 @@ export default {
   name: "MusicCollection",
   props: {},
   data() {
-    return {};
+    return {
+      musicListName: "",
+    };
   },
-  methods: {},
+  methods: {
+    //关闭歌单添加框
+    $_notShowBox:function(){
+      this.$store.commit("notShowAddListBox");
+    },
+    //将焦点歌曲添加至新增歌单
+    $_addMusics: function () {
+      let newList = {};
+      newList.name = this.musicListName;
+      newList.listMusic = [this.$store.getters.nowMusic];
+      this.$store.commit("addNewMusicLists", newList);
+      this.musicListName = "";
+      this.$_notShowBox();
+       //将改动后的歌单存入硬盘
+      window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+    },
+    //查询ID是否在我的喜欢中
+    $_queryID: function (id) {
+      return this.$store.getters.loveID.includes(id);
+    },
+    //将当前焦点歌曲添加至我的喜欢
+    $_addLoveList: function () {
+      if (this.$_queryID(this.$store.getters.nowMusic.id)) {
+        console.log("歌曲已经存在“我的喜欢”曲库中！请勿重复添加");
+        return;
+      }
+      this.$store.commit("addNowToLoveList", this.$store.getters.nowMusic);
+    },
+    //将当前焦点歌曲收藏至至选定的歌单
+    $_addMusicList: function (index) {
+      //对需要添加歌曲的歌单提取ID，并检验改歌曲是否已经在此歌单中
+      let ids = this.$store.state.musicList[index].listMusic.map((item) => {
+        return item.id;
+      });
+      if (ids.includes(this.$store.getters.nowMusic.id)) {
+        console.log("歌曲已经在此歌单中,请勿重复添加！");
+        return;
+      }
+      //调用函数将当前焦点歌曲添加至对应歌单
+      this.$store.commit("addNowList", [this.$store.getters.nowMusic, index]);
+      this.$_notShowBox();
+       //将改动后的歌单存入硬盘
+      window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+    },
+  },
 };
 </script>
 <style scoped>
@@ -49,7 +102,7 @@ export default {
   padding: 5px 10px;
   text-align: left;
   border-radius: 8px;
-  border:#DAE3F3 solid 1px;
+  border: #dae3f3 solid 1px;
   box-shadow: 2px 1px 4px 2px #68686886;
 }
 .collectionHeader {
@@ -104,8 +157,13 @@ export default {
   background-color: #d6dce5;
   margin: 0px 20px;
 }
-.mowLists li {
-  margin:5px;
+.nowLists {
+  height: 180px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.nowLists li {
+  margin: 5px;
   margin-left: 90px;
 }
 ._box {

@@ -52,7 +52,12 @@
         <!-- 添加至喜欢歌单  -->
         <img class="love" src="../assets/喜欢.svg" alt="喜欢" />
         <!-- 收藏至歌单 -->
-        <img class="collect" src="../assets/收藏.svg" alt="收藏" />
+        <img
+          class="collect"
+          src="../assets/收藏.svg"
+          alt="收藏"
+          @click="showAddBbox"
+        />
         <!-- 下载该歌曲 -->
         <img class="download" src="../assets/下载.svg" alt="下载" />
         <!-- 音量组件 -->
@@ -62,7 +67,10 @@
         ></GainController>
       </div>
     </div>
-    <MusicCollection class='musicCollection'></MusicCollection>
+    <MusicCollection
+      class="musicCollection"
+      v-show="this.$store.state.addMusicListBox"
+    ></MusicCollection>
   </div>
 </template>
 
@@ -90,13 +98,18 @@ export default {
     MusicCollection,
   },
   data() {
-    return {};
+    return {
+      showAddListBox: false,
+    };
   },
   watch: {
-    // musicSrc() {
-    //   let musicDom = this.$refs.musicDom;
-    //   musicDom.load();
-    // },
+    //监听我的喜欢列表，变动后将列表数据存入硬盘
+    myLoveMusicList: function () {
+      window.localStorage.setItem(
+        "myLoveMusicList",
+        JSON.stringify(this.myLoveMusicList)
+      );
+    },
   },
   computed: {
     musicSrc: function () {
@@ -115,8 +128,18 @@ export default {
       let writer = this.$store.getters.nowMusic.writer;
       return writer;
     },
+    myLoveMusicList: function () {
+      return this.$store.state.myLoveMusicList;
+    },
+    musicList: function () {
+      return this.$store.state.musicList;
+    },
   },
   methods: {
+    //显示歌单添加框map
+    showAddBbox: function () {
+      this.$store.commit("showAddListBox");
+    },
     //更新audio标签的音量与音量数据同步
     audioTb: function () {
       const musicDom = this.$refs.musicDom; //导入audio标签
@@ -179,12 +202,16 @@ export default {
       this.$store.state.playState = true;
       this.log();
     },
-    //播放选定库曲目(网络与本地)
+    //播放选定库曲目(网络与本地与收藏)
     playThis: function (listMode, index) {
       if (listMode === 1) {
         this.$store.state.networkIndex = index;
-      } else {
+      }
+      if (listMode === 2) {
         this.$store.state.myLoveIndex = index;
+      }
+      if (listMode === 3) {
+        this.$store.state.collectionIndex = index;
       }
       this.$store.state.listMode = listMode;
       const musicDom = this.$refs.musicDom;
@@ -243,8 +270,18 @@ export default {
 
   crearte: function () {},
   beforeMount: function () {
-    //在视图渲染前，将硬盘中的歌单写入musicList中；
-    // this.musicList = JSON.parse(window.localStorage.getItem("musicList"));
+    // 在视图渲染前，将硬盘中的c存储的歌单写入musicList中；
+    let myLoveMusicList = JSON.parse(
+      window.localStorage.getItem("myLoveMusicList")
+    );
+    if (myLoveMusicList) {
+      this.$store.state.myLoveMusicList = myLoveMusicList;
+    }
+
+    let musicLists = JSON.parse(window.localStorage.getItem("musicLists"));
+    if (musicLists) {
+      this.$store.state.musicList = musicLists;
+    }
   },
   mounted: function () {
     const musicDom = this.$refs.musicDom; //导入audio标签
@@ -369,10 +406,10 @@ ul {
   color: rgb(80, 80, 80);
   font-style: italic;
 }
-.musicCollection{
+.musicCollection {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 </style>

@@ -36,7 +36,11 @@
 
             <div
               class="musicName"
-              :class="{ musicNameActive: index === $store.state.networkIndex }"
+              :class="{
+                musicNameActive:
+                  index === $store.state.networkIndex &&
+                  $store.state.listMode === 1,
+              }"
               @click="$listeners.playThis(1, index)"
             >
               {{ item.musicName }}
@@ -59,7 +63,11 @@
             />
             <div
               class="musicName"
-              :class="{ musicNameActive: index === $store.state.myLoveIndex }"
+              :class="{
+                musicNameActive:
+                  index === $store.state.myLoveIndex &&
+                  $store.state.listMode === 2,
+              }"
               @click="$listeners.playThis(2, index)"
             >
               {{ item.musicName }}
@@ -68,7 +76,47 @@
           </li>
         </ul>
       </div>
-      <div class="collectList" v-show="showMode[2]"></div>
+      <!-- 我的收藏歌单 -->
+      <div class="collectList" v-show="showMode[2]">
+        <ul>
+          <li v-for="(item, index) of this.$store.state.musicList" :key="index">
+            <div class="listHeader">
+              <div class="documens"></div>
+              <div class="musicListName">{{ item.name }}</div>
+              <div class="deletList" @click="$_deletlist(index)"></div>
+            </div>
+            <!-- 各歌单中歌曲详情 -->
+            <div class="listParticulars">
+              <ul>
+                <li
+                  class="Particulars"
+                  v-for="(item_1, index_1) of item.listMusic"
+                  :key="item_1.id"
+                >
+                  <img
+                    src="../assets/删除.svg"
+                    class="delet"
+                    @click="$_deletMusic(index, index_1)"
+                  />
+                  <div
+                    class="musicName"
+                    @click="$listeners.playThis(3, [index, index_1])"
+                    :class="{
+                      musicNameActive:
+                        index === $store.state.collectionIndex[0] &&
+                        index_1 === $store.state.collectionIndex[1] &&
+                        $store.state.listMode === 3,
+                    }"
+                  >
+                    {{ item_1.musicName }}
+                  </div>
+                  <img src="@/assets/SVG.svg" class="video" />
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -99,6 +147,19 @@ export default {
     },
   },
   methods: {
+    //删除指定歌单中的歌曲
+    $_deletMusic: function (v1, v2) {
+      this.$store.commit("deletMusic", [v1, v2]);
+       //将改动后的歌单存入硬盘
+      window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+    },
+    //删除指定歌单
+    $_deletlist: function (index) {
+      if(index===0){return;}
+      this.$store.commit("deletlist", index);
+       //将改动后的歌单存入硬盘
+      window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+    },
     // 改变列表模式序号
     $_chuangeShowMode: function (value) {
       this.listShowMode = value;
@@ -178,7 +239,9 @@ export default {
 .list > div::-webkit-scrollbar {
   display: none;
 }
-.list li {
+.networkList li,
+.loveList li,
+.listParticulars li {
   display: flex;
   height: 40px;
   margin: 0px auto;
@@ -224,6 +287,7 @@ img {
   opacity: 0.4;
 }
 .loveList li:hover .delet,
+.listParticulars li:hover .delet,
 .networkList li:hover .addLove {
   visibility: visible;
 }
@@ -231,4 +295,39 @@ img {
   visibility: visible;
   opacity: 1;
 }
+.collectList li {
+}
+.listHeader {
+  display: flex;
+  height: 50px;
+}
+.documens {
+  width: 50px;
+  height: 50px;
+  background: url("../assets/文件夹-关闭.svg") no-repeat;
+  background-size: contain;
+}
+.musicListName {
+  height: 50px;
+  line-height: 50px;
+  font-size: 20px;
+  font-weight: 400;
+  width: 150px;
+  text-align: left;
+  font-family: 楷体;
+}
+.deletList{
+  width: 40px;
+  height: 50px;
+  background: url("../assets/删减歌单.svg") no-repeat center center;
+  background-size: contain;
+  opacity: 0%;
+}
+.listHeader:hover .deletList{
+  opacity: 80%;
+}
+.collectList li:nth-child(1) .deletList{
+  display: none;
+}
+
 </style>
