@@ -17,7 +17,7 @@
       <!-- 左侧列表 -->
       <div class="left">
         <!-- 左侧列表组件 -->
-        <MusicList @playThis="playThis" @resetSrc="resetSrc"></MusicList>
+        <MusicList @playThis="playThis" @resetSrc="resetSrc" ref="Musiclist"></MusicList>
       </div>
       <!-- 中间专辑内容 -->
       <div class="center">
@@ -50,11 +50,16 @@
       <!-- 右下按钮功能区 -->
       <div class="bottombar">
         <!-- 添加至喜欢歌单  -->
-        <img class="love" src="../assets/喜欢.svg" alt="喜欢" />
+        <img
+          class="love"
+          :src="require(`../assets/${loveState}`)"
+          alt="喜欢"
+          @click="loveButton"
+        />
         <!-- 收藏至歌单 -->
         <img
           class="collect"
-          src="../assets/收藏.svg"
+          :src="require(`../assets/${listState}`)"
           alt="收藏"
           @click="showAddBbox"
         />
@@ -148,6 +153,26 @@ export default {
     collectionIndex: function () {
       return this.$store.state.collectionIndex;
     },
+    //焦点歌曲是否在我的喜欢中，以此决定按钮图片
+    loveState: function () {
+      let url;
+      if (this.queryID(this.$store.getters.nowMusic.id, 0)) {
+        url = "已喜欢.svg";
+      } else {
+        url = "喜欢.svg";
+      }
+      return url;
+    },
+    //焦点歌曲是否在歌单中
+    listState: function () {
+      let url;
+      if (this.queryID(this.$store.getters.nowMusic.id, 1)) {
+        url = "已收藏.svg";
+      } else {
+        url = "收藏.svg";
+      }
+      return url;
+    },
   },
   methods: {
     //显示歌单添加框map
@@ -192,17 +217,19 @@ export default {
       }
       if (this.$store.state.listMode === 3) {
         let i = [];
-        i[0]=this.collectionIndex[0];
-        i[1]=this.collectionIndex[1];
+        i[0] = this.collectionIndex[0];
+        i[1] = this.collectionIndex[1];
         if (this.collectionIndex[1] < this.musicListNowChild.length - 1) {
           i[1] += 1;
         } else {
           if (this.collectionIndex[0] < this.musicList.length - 1) {
             i[1] = 0;
             i[0]++;
-          }else{ return;}
+          } else {
+            return;
+          }
         }
-        this.$store.commit("chuangeCollectionIndex",i);
+        this.$store.commit("chuangeCollectionIndex", i);
       }
       musicDom.load();
       musicDom.play();
@@ -221,17 +248,19 @@ export default {
       if (this.$store.state.listMode === 3) {
         // this.$store.state.collectionIndex[1]--;
         let i = [];
-        i[0]=this.collectionIndex[0];
-        i[1]=this.collectionIndex[1];
+        i[0] = this.collectionIndex[0];
+        i[1] = this.collectionIndex[1];
         if (this.collectionIndex[1] > 0) {
           i[1] -= 1;
         } else {
           if (this.collectionIndex[0] > 0) {
             i[0]--;
-            i[1] = this.$store.state.musicList[i[0]].listMusic.length-1;
-          }else{ return;}
+            i[1] = this.$store.state.musicList[i[0]].listMusic.length - 1;
+          } else {
+            return;
+          }
         }
-        this.$store.commit("chuangeCollectionIndex",i);
+        this.$store.commit("chuangeCollectionIndex", i);
       }
       const musicDom = this.$refs.musicDom;
       musicDom.load();
@@ -269,6 +298,27 @@ export default {
       const musicDom = this.$refs.musicDom;
       musicDom.load();
     },
+    //输入id,查询是否在我的喜欢货歌单中 0搜索我的喜欢，1搜索歌单
+    queryID: function (id, mode) {
+      let state;
+      if (mode === 0) {
+        state = this.$store.getters.loveID.includes(id);
+      } else {
+        state = this.$store.getters.listID.includes(id);
+      }
+      return state;
+    },
+    //点击右下角喜欢图标，焦点歌曲未收藏则收藏，已收藏则取消收藏
+    loveButton: function () {
+      if (this.queryID(this.$store.getters.nowMusic.id, 0) === false) {
+        this.$store.commit("addNowToLoveList", this.$store.getters.nowMusic);
+      }else{
+        const Musiclist=this.$refs.Musiclist;
+        let idIndex=this.$store.getters.loveID.indexOf(this.$store.getters.nowMusic.id);
+        Musiclist.$_removeLoveMusic(idIndex);
+      }
+    },
+    //显示当前焦点歌曲的歌单。序号、路径
     log: function () {
       switch (this.$store.state.listMode) {
         case 1: {

@@ -96,7 +96,7 @@ export default new Vuex.Store({
     addNewMusicLists: function (state, newList) {
       state.musicList.push(newList);
     },
-    //将当前播放歌曲去信息添加至我的喜欢
+    //将当前播放歌曲信息添加至我的喜欢
     addNowToLoveList: function (state, value) {
       state.myLoveMusicList.push(value)
     },
@@ -147,6 +147,16 @@ export default new Vuex.Store({
     loveID: (state) => {
       let ids = state.myLoveMusicList.map(function (item) { return item.id });
       return ids;
+    },
+    //返回歌单中歌曲的ID数组供查重
+    listID:(state)=>{
+    let ids=[];
+    for(let i=0;i<state.musicList.length;i++){
+      for(let j=0;j<state.musicList[i].listMusic.length;j++){
+        ids.push(state.musicList[i].listMusic[j].id);
+      }
+      return ids;
+    }
     },
     //我的喜欢曲库歌曲数量（含开头空列表）
     loveListLength: function (state) {
