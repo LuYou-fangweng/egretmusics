@@ -120,11 +120,15 @@ export default new Vuex.Store({
     deletlist:function(state,index){
       state.musicList.splice(index,1)
     },
+    //改变收藏歌单序号
+    chuangeCollectionIndex:function(state,index){
+      state.collectionIndex=index;
+    }
   },
   actions: {},
   getters: {
     //根据焦点歌曲所在列表与序号，返回歌曲的信息
-    nowMusic: (state) => {
+    nowMusic: function(state) {
       let a;
       switch (state.listMode) {
         case 1:
@@ -154,6 +158,7 @@ export default new Vuex.Store({
       switch (state.listMode) {
         case 1: return state.networkMusicList.length;
         case 2: return state.myLoveMusicList.length;
+        case 3: return state.musicList[state.collectionIndex[0]].listMusic.length;
       }
 
     },
@@ -162,6 +167,7 @@ export default new Vuex.Store({
       switch (state.listMode) {
         case 1: return state.networkIndex;
         case 2: return state.myLoveIndex;
+        case 3: return state.collectionIndex[1];
       }
     }
   },

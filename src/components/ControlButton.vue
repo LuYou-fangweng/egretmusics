@@ -28,6 +28,10 @@ export default {
       }
     },
     next: function () {
+      if(this.$store.state.listMode==3){
+        this.$listeners.next()
+        return;
+      }
       if (this.$store.getters.nowIndex < this.$store.getters.nowLength - 1) {
         this.$listeners.next();
       }

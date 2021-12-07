@@ -129,10 +129,24 @@ export default {
       return writer;
     },
     myLoveMusicList: function () {
-      return this.$store.state.myLoveMusicList;
+      let m = this.$store.state.myLoveMusicList;
+      return m;
     },
+    //歌单
     musicList: function () {
-      return this.$store.state.musicList;
+      let m = this.$store.state.musicList;
+      return m;
+    },
+    //当前收藏歌单焦点所在的子歌单
+    musicListNowChild: function () {
+      let c =
+        this.$store.state.musicList[this.$store.state.collectionIndex[0]]
+          .listMusic;
+      return c;
+    },
+    //歌单序号、所在歌曲序号
+    collectionIndex: function () {
+      return this.$store.state.collectionIndex;
     },
   },
   methods: {
@@ -169,6 +183,7 @@ export default {
     },
     //下一首
     next: function () {
+      const musicDom = this.$refs.musicDom;
       if (this.$store.state.listMode === 1) {
         this.$store.state.networkIndex++;
       }
@@ -176,9 +191,21 @@ export default {
         this.$store.state.myLoveIndex++;
       }
       if (this.$store.state.listMode === 3) {
-        // this.$store.state.collectionIndex[1]++;
+        // let i = this.collectionIndex;
+        // if (this.collectionIndex[1] < this.musicListNowChild.length - 1) {
+        //   i[1] += 1;
+        // } else {
+        //   if (this.collectionIndex[0] < this.musicList.length - 1) {
+        //     i[1] = 0;
+        //     i[0]++;
+        //   }
+        // }
+        // // this.$store.state.collectionIndex=i;
+        // this.$store.commit("chuangeCollectionIndex",i);
+        //  console.log(this.collectionIndex);
+        //  console.log(this.$store.getters.nowMusic);
+        return;
       }
-      const musicDom = this.$refs.musicDom;
       musicDom.load();
       musicDom.play();
       this.$store.state.playState = true;
