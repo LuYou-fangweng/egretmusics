@@ -23,6 +23,10 @@ export default {
   },
   methods: {
     prev: function () {
+       if(this.$store.state.listMode==3){
+        this.$listeners.prev()
+        return;
+      }
       if (this.$store.getters.nowIndex > 1) {
         this.$listeners.prev();
       }

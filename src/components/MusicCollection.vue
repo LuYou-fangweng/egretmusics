@@ -65,7 +65,7 @@ export default {
     //将当前焦点歌曲添加至我的喜欢
     $_addLoveList: function () {
       if (this.$_queryID(this.$store.getters.nowMusic.id)) {
-        console.log("歌曲已经存在“我的喜欢”曲库中！请勿重复添加");
+        alert("歌曲已经存在“我的喜欢”曲库中！请勿重复添加");
         return;
       }
       this.$store.commit("addNowToLoveList", this.$store.getters.nowMusic);
@@ -77,7 +77,7 @@ export default {
         return item.id;
       });
       if (ids.includes(this.$store.getters.nowMusic.id)) {
-        console.log("歌曲已经在此歌单中,请勿重复添加！");
+        alert("歌曲已经在此歌单中,请勿重复添加！");
         return;
       }
       //调用函数将当前焦点歌曲添加至对应歌单

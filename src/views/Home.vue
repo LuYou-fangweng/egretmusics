@@ -191,20 +191,18 @@ export default {
         this.$store.state.myLoveIndex++;
       }
       if (this.$store.state.listMode === 3) {
-        // let i = this.collectionIndex;
-        // if (this.collectionIndex[1] < this.musicListNowChild.length - 1) {
-        //   i[1] += 1;
-        // } else {
-        //   if (this.collectionIndex[0] < this.musicList.length - 1) {
-        //     i[1] = 0;
-        //     i[0]++;
-        //   }
-        // }
-        // // this.$store.state.collectionIndex=i;
-        // this.$store.commit("chuangeCollectionIndex",i);
-        //  console.log(this.collectionIndex);
-        //  console.log(this.$store.getters.nowMusic);
-        return;
+        let i = [];
+        i[0]=this.collectionIndex[0];
+        i[1]=this.collectionIndex[1];
+        if (this.collectionIndex[1] < this.musicListNowChild.length - 1) {
+          i[1] += 1;
+        } else {
+          if (this.collectionIndex[0] < this.musicList.length - 1) {
+            i[1] = 0;
+            i[0]++;
+          }else{ return;}
+        }
+        this.$store.commit("chuangeCollectionIndex",i);
       }
       musicDom.load();
       musicDom.play();
@@ -222,6 +220,18 @@ export default {
       }
       if (this.$store.state.listMode === 3) {
         // this.$store.state.collectionIndex[1]--;
+        let i = [];
+        i[0]=this.collectionIndex[0];
+        i[1]=this.collectionIndex[1];
+        if (this.collectionIndex[1] > 0) {
+          i[1] -= 1;
+        } else {
+          if (this.collectionIndex[0] > 0) {
+            i[0]--;
+            i[1] = this.$store.state.musicList[i[0]].listMusic.length-1;
+          }else{ return;}
+        }
+        this.$store.commit("chuangeCollectionIndex",i);
       }
       const musicDom = this.$refs.musicDom;
       musicDom.load();
