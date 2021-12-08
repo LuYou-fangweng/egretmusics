@@ -1,6 +1,6 @@
 <template>
   <div class="controlButton">
-    <div class="playOrder"></div>
+    <img :src="require(`../assets/${modeImg}`)" alt="播放模式" class="playOrder" @click="chuangePlayMode">
     <div class="previous" @click="prev"></div>
     <div
       class="play yuan"
@@ -21,7 +21,31 @@ export default {
       playState: false,
     };
   },
+  computed:{
+  modeImg:function(){
+    if(this.$store.state.playMode===1){
+      return "顺序播放.svg";
+    }
+    if(this.$store.state.playMode===2){
+      return "循环播放.svg"
+    }
+    if(this.$store.state.playMode===3){
+      return "乱序播放.svg"
+    }
+  }
+  },
   methods: {
+     //修改播放播放模式
+    chuangePlayMode:function(){
+      let i=this.$store.state.playMode;
+      if(i<3){
+        i++
+      }else{
+        i=1;
+      }
+      this.$store.commit("chuangePlayMode",i)
+    },
+    //上一首
     prev: function () {
        if(this.$store.state.listMode==3){
         this.$listeners.prev()
@@ -31,6 +55,7 @@ export default {
         this.$listeners.prev();
       }
     },
+    //下一首
     next: function () {
       if(this.$store.state.listMode==3){
         this.$listeners.next()
@@ -51,7 +76,7 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.controlButton div {
+.controlButton div,.controlButton img {
   background-size: contain;
   margin: auto 0px;
 }
@@ -78,12 +103,13 @@ export default {
 }
 .playOrder,
 .contentChanges {
-  height: 34px;
-  width: 34px;
+  height: 40px;
+  width: 40px;
 }
-.playOrder {
-  background: url("../assets/顺序播放.svg");
+.playOrder{
+
 }
+
 .previous {
   background: url("../assets/上一首.svg");
 }

@@ -147,18 +147,97 @@ export default {
     },
   },
   methods: {
-    //删除指定歌单中的歌曲
+    //删除指定歌单中的歌曲并根据删除位置改变歌单焦点
     $_deletMusic: function (v1, v2) {
+      // console.log("进入删除函数");
+      let i = [];
+      // i[0]=this.$store.state.collectionIndex[0];
+      // i[1]=this.$store.state.collectionIndex[1];
+      Object.assign(i, this.$store.state.collectionIndex);
+      // console.log(`删除前焦点i:${i}，删除点[${v1},${v2}]`);
+      if (v1 === i[0]) {
+        if (v2 < i[1]) {
+          console.log(`执行序号-1`);
+          i[1]--;
+        } else {
+          if (v2 === i[1]) {
+            if (v2 === this.$store.state.musicList[i[0]].listMusic.length - 1) {
+              if (v2 === 0) {
+                while (
+                  i[0] > 0 &&
+                  this.$store.state.musicList[i[0] - 1].listMusic.length === 0
+                ) {
+                  i[0]--;
+                }
+                if (v1 === 0) {
+                  // console.log("判断需要转移歌单模式");
+                  // this.$store.commit("chuangeListMode", 1);
+                  this.$store.state.listMode = 1;
+                  console.log("转移至网络歌单");
+                  this.$store.commit("changeNetWorkIndex", 0);
+                  console.log("焦点为0");
+                  this.$store.commit("deletMusic", [v1, v2]);
+                  this.$listeners.resetSrc();
+                  //将改动后的歌单存入硬盘
+                  window.localStorage.setItem(
+                    "musicLists",
+                    JSON.stringify(this.$store.state.musicList)
+                  );
+                  return;
+                }
+                i[0]--;
+                i[1] = this.$store.state.musicList[i[0]].listMusic.length;
+              }
+              i[1]--;
+              // console.log(`删除后焦点i:${i}，删除点[${v1},${v2}]`);
+              this.$store.commit("chuangeCollectionIndex", i);
+            }
+
+            this.$store.commit("deletMusic", [v1, v2]);
+            this.$listeners.resetSrc();
+            //将改动后的歌单存入硬盘
+            window.localStorage.setItem(
+              "musicLists",
+              JSON.stringify(this.$store.state.musicList)
+            );
+            return;
+          }
+        }
+      }
+      // console.log(`删除后焦点i:${i}，删除点[${v1},${v2}]`);
+      this.$store.commit("chuangeCollectionIndex", i);
       this.$store.commit("deletMusic", [v1, v2]);
-       //将改动后的歌单存入硬盘
-      window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+      //将改动后的歌单存入硬盘
+      window.localStorage.setItem(
+        "musicLists",
+        JSON.stringify(this.$store.state.musicList)
+      );
     },
     //删除指定歌单
     $_deletlist: function (index) {
-      if(index===0){return;}
+      if (index === 0) {
+        return;
+      }
+      let i = [];
+      Object.assign(i, this.$store.state.collectionIndex);
+      if (index < i[0]) {
+        i[0]--;
+      }
+      if (index === i[0]) {
+        if (this.$store.state.musicList[0].listMusic.length !== 0) {
+          this.$store.commit("chuangeCollectionIndex", [0, 0]);
+        } else {
+          this.$store.state.listMode = 1;
+          this.$store.commit("changeNetWorkIndex", 0);
+        }
+        this.$listeners.resetSrc();
+      }
       this.$store.commit("deletlist", index);
-       //将改动后的歌单存入硬盘
-      window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+      //将改动后的歌单存入硬盘
+      window.localStorage.setItem(
+        "musicLists",
+        JSON.stringify(this.$store.state.musicList)
+      );
     },
     // 改变列表模式序号
     $_chuangeShowMode: function (value) {
@@ -316,18 +395,17 @@ img {
   text-align: left;
   font-family: 楷体;
 }
-.deletList{
+.deletList {
   width: 40px;
   height: 50px;
   background: url("../assets/删减歌单.svg") no-repeat center center;
   background-size: contain;
   opacity: 0%;
 }
-.listHeader:hover .deletList{
+.listHeader:hover .deletList {
   opacity: 80%;
 }
-.collectList li:nth-child(1) .deletList{
+.collectList li:nth-child(1) .deletList {
   display: none;
 }
-
 </style>

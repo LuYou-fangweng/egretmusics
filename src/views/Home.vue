@@ -17,7 +17,11 @@
       <!-- 左侧列表 -->
       <div class="left">
         <!-- 左侧列表组件 -->
-        <MusicList @playThis="playThis" @resetSrc="resetSrc" ref="Musiclist"></MusicList>
+        <MusicList
+          @playThis="playThis"
+          @resetSrc="resetSrc"
+          ref="Musiclist"
+        ></MusicList>
       </div>
       <!-- 中间专辑内容 -->
       <div class="center">
@@ -41,6 +45,7 @@
           @next="next"
           @prev="prev"
           @playThis="playThis"
+          ref="ControlButton"
         ></ControlButton>
         <ControlStrip
           class="controlStrip"
@@ -118,7 +123,13 @@ export default {
   },
   computed: {
     musicSrc: function () {
-      let src = this.$store.getters.nowMusic.src;
+      let src;
+      if (!this.$store.getters.nowMusic.src) {
+        src = "";
+      } else {
+        src = this.$store.getters.nowMusic.src;
+      }
+
       return src;
     },
     musicName: function () {
@@ -175,6 +186,44 @@ export default {
     },
   },
   methods: {
+   
+    //播放模式设定函数，根据设定的列表焦点输出乱序播放的序号
+    playModel: function (index) {
+      let indexNext = 0;
+      switch (index) {
+        case 1:
+        case 2: {
+          if (this.$store.getters.nowLength !== 1) {
+            indexNext = Math.ceil(
+              (this.$store.getters.nowLength - 1) * Math.random()
+            );
+          }
+          break;
+        }
+        case 3: {
+          let inde = Math.floor(
+            this.$store.getters.listID.length * Math.random()
+          );
+          let id=this.$store.getters.listID[inde]
+          for (let i = 0; i < this.$store.state.musicList.length; i++) {
+            for (
+              let j = 0;
+              j < this.$store.state.musicList[i].listMusic.length;
+              j++
+            ) {
+              if (this.$store.state.musicList[i].listMusic[j].id === id) {
+                indexNext = [i, j];
+                break;
+              }
+            }
+          }
+          break;
+        }
+        default:
+          console.length("列表焦点错误！");
+      }
+      return indexNext;
+    },
     //显示歌单添加框map
     showAddBbox: function () {
       this.$store.commit("showAddListBox");
@@ -312,9 +361,11 @@ export default {
     loveButton: function () {
       if (this.queryID(this.$store.getters.nowMusic.id, 0) === false) {
         this.$store.commit("addNowToLoveList", this.$store.getters.nowMusic);
-      }else{
-        const Musiclist=this.$refs.Musiclist;
-        let idIndex=this.$store.getters.loveID.indexOf(this.$store.getters.nowMusic.id);
+      } else {
+        const Musiclist = this.$refs.Musiclist;
+        let idIndex = this.$store.getters.loveID.indexOf(
+          this.$store.getters.nowMusic.id
+        );
         Musiclist.$_removeLoveMusic(idIndex);
       }
     },
@@ -355,7 +406,8 @@ export default {
     },
   },
 
-  crearte: function () {},
+  crearte: function () {
+  },
   beforeMount: function () {
     // 在视图渲染前，将硬盘中的c存储的歌单写入musicList中；
     let myLoveMusicList = JSON.parse(
@@ -369,19 +421,58 @@ export default {
     if (musicLists) {
       this.$store.state.musicList = musicLists;
     }
+     //设置初始播放模式；
+    this.$store.commit("chuangePlayMode",1);
+    // this.$store.state.playMode=2;
+    // console.log(`设置播放模式为：${this.$store.state.playMode}`)
+    
   },
   mounted: function () {
+    
     const musicDom = this.$refs.musicDom; //导入audio标签
-    //设置初始状态音量
-    this.chuangeVolume(0.45);
+    //导入ControlButton
+    const ControlButton=this.$refs.ControlButton;
     musicDom.volume = this.$store.state.volume;
     //audio标签重载SRC时，返回歌曲总时长
     musicDom.onloadedmetadata = () => {
       this.$store.commit("chuangeMusicLength", parseInt(musicDom.duration));
     };
+    //设置初始状态音量
+    this.chuangeVolume(0.45);
     //audio标签重每秒更新播放进度
     musicDom.ontimeupdate = () => {
       this.$store.commit("chuangenusicTime", parseInt(musicDom.currentTime));
+    };
+    //根据播放模式设置，决定是循序播放(1)、单曲循环()2、乱序播放(3)
+    musicDom.onended = () => {
+    musicDom.pause();
+    this.$store.state.playState=false;
+   console.log(`当前播放模式为:${this.$store.state.playMode}`);
+      if (this.$store.state.playMode === 1) {
+        ControlButton.next();
+        return;
+      }
+      if (this.$store.state.playMode === 2) {
+        musicDom.play();
+        this.$store.state.playState=true;
+        return;
+      }
+      if (this.$store.state.playMode === 3) {
+        if (this.$store.state.listMode === 1) {
+          this.$store.commit("changeNetWorkIndex", this.playModel(1));
+        }
+        if (this.$store.state.listMode === 2) {
+          this.$store.commit("changeMyLoveIndex", this.playModel(2));
+        }
+        if (this.$store.state.listMode === 3) {
+          this.$store.state.collectionIndex = this.playModel(3);
+        }
+        musicDom.load();
+        musicDom.play();
+        this.$store.state.playState=true;
+        this.log();
+        return;
+      }
     };
   },
   beforeUpdate: function () {},

@@ -85,6 +85,7 @@ export default {
       this.$_notShowBox();
        //将改动后的歌单存入硬盘
       window.localStorage.setItem("musicLists", JSON.stringify(this.$store.state.musicList));
+
     },
   },
 };

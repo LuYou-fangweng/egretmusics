@@ -39,6 +39,7 @@ export default new Vuex.Store({
     nusicTime: 0,//歌曲播放进度
     volume: 0,//歌曲音量
     addMusicListBox: false,//歌单添加框显示状态
+  
 
     // 评论区信息
     comment: [
@@ -80,6 +81,10 @@ export default new Vuex.Store({
     changeNetWorkIndex: function (state, index) {
       state.networkIndex = index;
     },
+     //重置我的喜欢曲库焦点至特定序号
+     changeMyLoveIndex: function (state, index) {
+      state.myLoveIndex = index;
+    },
     //改变歌曲总长度
     chuangeMusicLength: function (state, value) {
       state.musicLength = value;
@@ -100,9 +105,15 @@ export default new Vuex.Store({
     addNowToLoveList: function (state, value) {
       state.myLoveMusicList.push(value)
     },
-    //将当前播放歌曲的信息添加至选定的歌单
+    //将当前播放歌曲的信息添加至选定的歌单(未知BUG不能使用)
+    // addNowList: function (state, [value, index]) {
+    //   state.musicList[index].listMusic.push(value)
+    // },
     addNowList: function (state, [value, index]) {
-      state.musicList[index].listMusic.push(value)
+      let list = [];
+      Object.assign(list, state.musicList[index].listMusic)
+      list.push(value);
+      state.musicList[index].listMusic = list;
     },
     //显示歌单添加框
     showAddListBox: function (state) {
@@ -113,22 +124,31 @@ export default new Vuex.Store({
       state.addMusicListBox = false;
     },
     //删除指定歌单的指定歌曲
-    deletMusic:function(state,[index1,index2]){
-    state.musicList[index1].listMusic.splice(index2,1)
+    deletMusic: function (state, [index1, index2]) {
+      state.musicList[index1].listMusic.splice(index2, 1)
     },
     //删除指定歌单
-    deletlist:function(state,index){
-      state.musicList.splice(index,1)
+    deletlist: function (state, index) {
+      state.musicList.splice(index, 1)
     },
     //改变收藏歌单序号
-    chuangeCollectionIndex:function(state,index){
-      state.collectionIndex=index;
-    }
+    chuangeCollectionIndex: function (state, index) {
+      state.collectionIndex = index;
+    },
+    //改变歌曲焦点模式
+    chuangeListMode: function (state, index) {
+      state.listMode = index;
+    },
+    //改变播放模式
+    chuangePlayMode:function(state,index){
+     state.playMode=index;
+    },
+
   },
   actions: {},
   getters: {
     //根据焦点歌曲所在列表与序号，返回歌曲的信息
-    nowMusic: function(state) {
+    nowMusic: function (state) {
       let a;
       switch (state.listMode) {
         case 1:
@@ -149,37 +169,37 @@ export default new Vuex.Store({
       return ids;
     },
     //返回歌单中歌曲的ID数组供查重
-    listID:(state)=>{
-    let ids=[];
-    for(let i=0;i<state.musicList.length;i++){
-      for(let j=0;j<state.musicList[i].listMusic.length;j++){
-        ids.push(state.musicList[i].listMusic[j].id);
+    listID: (state) => {
+      let ids = [];
+      for (let i = 0; i < state.musicList.length; i++) {
+        // for (let j = 0; j < state.musicList[i].listMusic.length; j++) {
+        //   ids.push(state.musicList[i].listMusic[j].id);
+        ids.push(...state.musicList[i].listMusic.map(function (item) { return item.id }));
       }
       return ids;
-    }
     },
-    //我的喜欢曲库歌曲数量（含开头空列表）
-    loveListLength: function (state) {
-      let l = state.myLoveMusicList.length - 1;
-      return l;
-    },
-    //当前歌单模式列表长度
-    nowLength: function (state) {
-      switch (state.listMode) {
-        case 1: return state.networkMusicList.length;
-        case 2: return state.myLoveMusicList.length;
-        case 3: return state.musicList[state.collectionIndex[0]].listMusic.length;
-      }
-
-    },
-    //当前焦点歌曲序号map
-    nowIndex: function (state) {
-      switch (state.listMode) {
-        case 1: return state.networkIndex;
-        case 2: return state.myLoveIndex;
-        case 3: return state.collectionIndex[1];
-      }
-    }
+  //我的喜欢曲库歌曲数量（含开头空列表）
+  loveListLength: function (state) {
+    let l = state.myLoveMusicList.length - 1;
+    return l;
   },
+  //当前歌单模式列表长度
+  nowLength: function (state) {
+    switch (state.listMode) {
+      case 1: return state.networkMusicList.length;
+      case 2: return state.myLoveMusicList.length;
+      case 3: return state.musicList[state.collectionIndex[0]].listMusic.length;
+    }
+
+  },
+  //当前焦点歌曲序号map
+  nowIndex: function (state) {
+    switch (state.listMode) {
+      case 1: return state.networkIndex;
+      case 2: return state.myLoveIndex;
+      case 3: return state.collectionIndex[1];
+    }
+  }
+},
   modules: {},
 });
