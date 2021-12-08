@@ -475,7 +475,10 @@ export default {
       }
     };
   },
-  beforeUpdate: function () {},
+  beforeUpdate: function () {
+    const musicDom = this.$refs.musicDom;
+    musicDom.volume = this.$store.state.volume;
+  },
 };
 </script>
 <style>
