@@ -43,8 +43,8 @@ export default {
         })
         .then(function (response) {
           // 对返回数据进行提取，选取ID、歌名、专辑、作者、URL信息。S
-          let t= response.data.result.songs;
-          console.log(t);
+          // let t= response.data.result.songs;
+          // console.log(t);
 
           const searchMusicList = response.data.result.songs.map((item) => {
             const { name: musicName, id, artists, album,mvid } = item;

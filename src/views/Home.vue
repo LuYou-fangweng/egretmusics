@@ -525,17 +525,17 @@ export default {
   },
   beforeMount: function () {
     // 在视图渲染前，将硬盘中的c存储的歌单写入musicList中；
-    let myLoveMusicList = JSON.parse(
-      window.localStorage.getItem("myLoveMusicList")
-    );
-    if (myLoveMusicList) {
-      this.$store.state.myLoveMusicList = myLoveMusicList;
-    }
+    // let myLoveMusicList = JSON.parse(
+    //   window.localStorage.getItem("myLoveMusicList")
+    // );
+    // if (myLoveMusicList) {
+    //   this.$store.state.myLoveMusicList = myLoveMusicList;
+    // }
 
-    let musicLists = JSON.parse(window.localStorage.getItem("musicLists"));
-    if (musicLists) {
-      this.$store.state.musicList = musicLists;
-    }
+    // let musicLists = JSON.parse(window.localStorage.getItem("musicLists"));
+    // if (musicLists) {
+    //   this.$store.state.musicList = musicLists;
+    // }
      //设置初始播放模式；
     this.$store.commit("chuangePlayMode",1);
     // this.$store.state.playMode=2;

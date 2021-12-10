@@ -1,6 +1,6 @@
 <template >
   <div class="comment">
-    <ul>
+    <transition-group tag='ul'>
       <li class="commentList" v-for="item of commentList" :key="item.id">
         <img :src="item.imgSrc" alt="" class="imgs" />
         <div class="commenFont">
@@ -9,7 +9,7 @@
           <p class="time">{{ item.timeStr }}</p>
         </div>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 

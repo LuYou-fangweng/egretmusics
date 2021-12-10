@@ -25,7 +25,7 @@
     </div>
     <div class="list">
       <div class="networkList" v-show="showMode[0]">
-        <ul>
+        <transition-group tag="ul">
           <li v-for="(item, index) in networkMusicList" :key="item.id">
             <img
               src="../assets/已喜欢.svg"
@@ -45,13 +45,18 @@
             >
               {{ item.musicName }}
             </div>
-            <img src="../assets/歌曲图标.svg" class="video" v-show="item.mvid!=0" @click="MV(item.mvid)"/>
+            <img
+              src="../assets/歌曲图标.svg"
+              class="video"
+              v-show="item.mvid != 0"
+              @click="MV(item.mvid)"
+            />
           </li>
-        </ul>
+        </transition-group>
       </div>
       <!-- 我的喜欢歌单 -->
       <div class="loveList" v-show="showMode[1]">
-        <ul>
+        <transition-group tag='ul'>
           <li
             v-for="(item, index) in this.$store.state.myLoveMusicList"
             :key="item.id"
@@ -72,14 +77,19 @@
             >
               {{ item.musicName }}
             </div>
-            <img src="../assets/歌曲图标.svg" class="video" v-show="item.mvid!=0"  @click="MV(item.mvid)"/>
+            <img
+              src="../assets/歌曲图标.svg"
+              class="video"
+              v-show="item.mvid != 0"
+              @click="MV(item.mvid)"
+            />
           </li>
-        </ul>
+        </transition-group>
       </div>
       <!-- 我的收藏歌单 -->
       <div class="collectList" v-show="showMode[2]">
-        <ul>
-          <li v-for="(item, index) of this.$store.state.musicList" :key="index">
+        <transition-group tag='ul'>
+          <li v-for="(item, index) of this.$store.state.musicList" :key="item.id">
             <div class="listHeader">
               <div class="documens"></div>
               <div class="musicListName">{{ item.name }}</div>
@@ -87,7 +97,7 @@
             </div>
             <!-- 各歌单中歌曲详情 -->
             <div class="listParticulars">
-              <ul>
+              <transition-group tag="ul">
                 <li
                   class="Particulars"
                   v-for="(item_1, index_1) of item.listMusic"
@@ -110,12 +120,17 @@
                   >
                     {{ item_1.musicName }}
                   </div>
-                  <img src="../assets/歌曲图标.svg" class="video" v-show="item_1.mvid!=0" @click="MV(item_1.mvid)" />
+                  <img
+                    src="../assets/歌曲图标.svg"
+                    class="video"
+                    v-show="item_1.mvid != 0"
+                    @click="MV(item_1.mvid)"
+                  />
                 </li>
-              </ul>
+              </transition-group>
             </div>
           </li>
-        </ul>
+        </transition-group>
       </div>
     </div>
   </div>
@@ -149,27 +164,25 @@ export default {
     },
   },
   methods: {
-   
     // 获取歌曲MV地址
-    MV:function(thisID){  
-      let them=this;
+    MV: function (thisID) {
+      let them = this;
       axios
         .get("https://autumnfish.cn/mv/url", {
           params: {
-          id: thisID,
+            id: thisID,
           },
         })
         .then(function (response) {
-        //  console.log(response);
-        them.$store.commit("chuangeMvUrl",response.data.data.url);
-        // console.log(them.$store.state.mvUrl);
-        them.$store.commit("chuangeMvShow");
-
+          //  console.log(response);
+          them.$store.commit("chuangeMvUrl", response.data.data.url);
+          // console.log(them.$store.state.mvUrl);
+          them.$store.commit("chuangeMvShow");
         })
         .catch(function (err) {
           console.log("网络请求出错！错误详情为：");
           console.log(err);
-        })
+        });
     },
     //删除指定歌单中的歌曲并根据删除位置改变歌单焦点
     $_deletMusic: function (v1, v2) {
@@ -309,6 +322,29 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+/* Vuex 列表动画设置 */
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(80px);
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.4s;
+}
+
+/* 下面的 .v-move 和 .v-leave-active 配合使用，能够实现列表后续的元素，渐渐地漂上来的效果
+    */
+.v-move {
+  transition: all 0.6s ease;
+}
+.v-leave-active {
+  position: absolute;
+}
+.jdt-enter-active {
+  transition: all 1s;
+}
 .musicList {
   width: 240px;
   height: 480px;

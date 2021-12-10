@@ -14,7 +14,7 @@ export default new Vuex.Store({
       { id: "", musicName: " ", album: " ", writer: " ", src: "" },
     ],
     //我的收藏歌曲列表
-    musicList: [{ name: "我的收藏(默认)", listMusic: [] }],
+    musicList: [{ id:1,name: "我的收藏(默认)", listMusic: [] }],
 
     inputText: "", //搜索框输入内容
     listMode: 1, //当前歌曲所在歌单状态

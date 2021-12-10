@@ -52,6 +52,7 @@ export default {
       let newList = {};
       newList.name = this.musicListName;
       newList.listMusic = [this.$store.getters.nowMusic];
+      newList.id=Date.now().toString(36);
       this.$store.commit("addNewMusicLists", newList);
       this.musicListName = "";
       this.$_notShowBox();
