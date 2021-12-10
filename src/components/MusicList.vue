@@ -45,7 +45,7 @@
             >
               {{ item.musicName }}
             </div>
-            <img src="@/assets/SVG.svg" class="video" />
+            <img src="../assets/歌曲图标.svg" class="video" v-show="item.mvid!=0" @click="MV(item.mvid)"/>
           </li>
         </ul>
       </div>
@@ -72,7 +72,7 @@
             >
               {{ item.musicName }}
             </div>
-            <img src="@/assets/SVG.svg" class="video" @click="$_queryID" />
+            <img src="../assets/歌曲图标.svg" class="video" v-show="item.mvid!=0"  @click="MV(item.mvid)"/>
           </li>
         </ul>
       </div>
@@ -110,7 +110,7 @@
                   >
                     {{ item_1.musicName }}
                   </div>
-                  <img src="@/assets/SVG.svg" class="video" />
+                  <img src="../assets/歌曲图标.svg" class="video" v-show="item_1.mvid!=0" @click="MV(item_1.mvid)" />
                 </li>
               </ul>
             </div>
@@ -121,6 +121,8 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   name: "musicList",
   props: {},
@@ -147,6 +149,28 @@ export default {
     },
   },
   methods: {
+   
+    // 获取歌曲MV地址
+    MV:function(thisID){  
+      let them=this;
+      axios
+        .get("https://autumnfish.cn/mv/url", {
+          params: {
+          id: thisID,
+          },
+        })
+        .then(function (response) {
+        //  console.log(response);
+        them.$store.commit("chuangeMvUrl",response.data.data.url);
+        // console.log(them.$store.state.mvUrl);
+        them.$store.commit("chuangeMvShow");
+
+        })
+        .catch(function (err) {
+          console.log("网络请求出错！错误详情为：");
+          console.log(err);
+        })
+    },
     //删除指定歌单中的歌曲并根据删除位置改变歌单焦点
     $_deletMusic: function (v1, v2) {
       // console.log("进入删除函数");

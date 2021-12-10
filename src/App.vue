@@ -1,20 +1,55 @@
 <template>
-  
   <div id="app">
     <!-- <div class="back"></div> -->
-    
+    <div class="background" :class="{'backgroundActive':this.$store.state.mvShow}"></div>
     <div id="nav">
       <router-link to="/">播放器</router-link> |
       <router-link to="/about">备注</router-link>
     </div>
     <router-view class="router" />
+    <div class="boxBox">
+      <VideoBox class="videoBox"></VideoBox>
+    </div>
+    
   </div>
 </template>
-
-
+<script>
+import VideoBox from "./components/VideoBox.vue";
+export default {
+  name: "app",
+  data() {
+    return {};
+  },
+  components: {
+    VideoBox,
+  },
+};
+</script>
 <style>
 .router {
   margin: 10px auto;
+}
+.boxBox {
+  left: 50%;
+  transform: translate(-50%);
+  position: absolute;
+  top:-90px;
+  
+}
+.background{
+  position:absolute;
+  width: 1980px;
+  height:1080px;
+  top: -108px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  background: url("./assets/背景1.png") no-repeat;
+   filter: blur(15px);
+   transition: all 1.5s ease;
+
+}
+.backgroundActive{
+  background: url("./assets/背景2.png") no-repeat;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -22,6 +57,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  position: relative;
 }
 
 #nav {
@@ -36,5 +72,4 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-
 </style>

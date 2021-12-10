@@ -5,7 +5,7 @@
       :class="{ recordActive: $store.state.playState === true }"
       @click="$_changeMode"
     >
-      <div class="cover"></div>
+      <img  :src="coverSrc" class="cover">
     </div>
     <div
       class="probe"
@@ -22,6 +22,15 @@ export default {
     return {
       // playStare: false 测试状态用数据
     };
+  },
+  computed:{
+  coverSrc:function(){
+    let src=require('../assets/默认封面.png');
+    if(!(this.$store.state.musicCover===''||this.$store.state.musicCover)){
+      src=this.$store.state.musicCover;
+    }
+    return src;
+  }
   },
   methods: {
     $_changeMode: function () {

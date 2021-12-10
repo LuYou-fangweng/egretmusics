@@ -4,8 +4,9 @@
       <li class="commentList" v-for="item of commentList" :key="item.id">
         <img :src="item.imgSrc" alt="" class="imgs" />
         <div class="commenFont">
-          <p class="commenName">{{ item.commenName }}</p>
-          <p class="commenText">{{ item.commenText }}</p>
+          <p class="commenName">{{ item.nickname }}</p>
+          <p class="commenText">{{ item.content }}</p>
+          <p class="time">{{ item.timeStr }}</p>
         </div>
       </li>
     </ul>
@@ -18,29 +19,17 @@ export default {
   props: {},
   data () {
     return {
-      commentList: [
-        {
-          id: '1',
-          commenName: '雪落轩门',
-          imgSrc: require('../assets/评论头像.png'),
-          commenText: '神行白鹭里，绫雪傲霜华'
-        },
-        {
-          id: '2',
-          commenName: '雪落轩门',
-          imgSrc: require('../assets/评论头像.png'),
-          commenText: '我真的太喜欢凌华了，真的太喜欢了，她是我心目中完美少女的化身'
-        },
-        {
-          id: '3',
-          commenName: '雪落轩门',
-          imgSrc: require('../assets/评论头像.png'),
-          commenText: '若知是梦何须醒，不比真如一相会'
-        }
-      ]
+      
     }
   },
-  methods: {}
+  computed:{
+    commentList:function(){
+      return this.$store.state.comment
+    }
+  },
+  methods: {
+    
+  }
 }
 </script>
 <style scoped>

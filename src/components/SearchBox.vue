@@ -33,25 +33,28 @@ export default {
       const them = this;
       /* axios
               .get("https://autumnfish.cn/search?keywords=" + them.searchText) */
+      //搜索歌曲
       axios
         .get("https://autumnfish.cn/search", {
           params: {
             keywords: them.searchText,
+            limit:100,
           },
         })
         .then(function (response) {
           // 对返回数据进行提取，选取ID、歌名、专辑、作者、URL信息。S
-          /* let t= response.data.result.songs;
-          console.log(t); */
+          let t= response.data.result.songs;
+          console.log(t);
 
           const searchMusicList = response.data.result.songs.map((item) => {
-            const { name: musicName, id, artists, album } = item;
+            const { name: musicName, id, artists, album,mvid } = item;
             return {
               id,
               musicName,
               album: album.name,
               writer: artists[0].name,
               src: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
+              mvid
             };
           });
           searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" });

@@ -4,18 +4,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //基本数据示例
-    /* networkMusicList: [
-      {
-        id: "",
-        musicName: "", // 歌名
-        albumName: "", // 专辑名
-        writer:"",// 艺术家
-        src: "", // 歌曲地址
-        coverSrc: "", // 封面地址
-        MV: "", // 是否有MV
-        MV_Src: "", // MV视频地址
-      },
-    ], */
+    
     // 网络歌曲列表
     networkMusicList: [
       { id: "", musicName: " ", album: " ", writer: " ", src: "" },
@@ -39,18 +28,38 @@ export default new Vuex.Store({
     nusicTime: 0,//歌曲播放进度
     volume: 0,//歌曲音量
     addMusicListBox: false,//歌单添加框显示状态
-  
+
+    musicslength:60,//搜索歌单默认结果数量
+    limit:30,//默认评论数
+
+    mvUrl:'',//,mv播放地址
+    mvShow:false,//mv播放器遮罩层
+
+    musicCover:'',//封面
+
+    canPlay:true,//是否有版权可播放
+   
 
     // 评论区信息
-    comment: [
-      {
-        imgs: "", // 头像链接
-        commenName: "", // 姓名
-        commenText: "", // 评论内容
-      },
-    ],
+    comment: [],
+
+    lyric:'',//歌词信息
+
+    
   },
   mutations: {
+    //改变遮罩层
+    chuangeMvShow:function(state){
+      state.mvShow=!state.mvShow;
+    },
+    //导入歌词
+    chuangeLyric:function(state,value){
+      state.lyric=value;
+     },
+    //导入MV地址
+    chuangeMvUrl:function(state,value){
+     state.mvUrl=value;
+    },
     //导入网络歌曲列表
     assignment: (state, arr) => {
       state.networkMusicList = arr;
@@ -143,6 +152,13 @@ export default new Vuex.Store({
     chuangePlayMode:function(state,index){
      state.playMode=index;
     },
+    //更新评论
+    chuangeComment:function(state,index){
+    state.comment=index;
+    },
+    chuangeCanPlay:function(state,index){
+      state.canPlay=index;
+      },
 
   },
   actions: {},

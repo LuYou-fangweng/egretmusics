@@ -93,7 +93,9 @@ import ControlStrip from "@/components/ControlStrip.vue";
 import GainController from "../components/GainController.vue";
 import AlbumCover from "../components/AlbumCover.vue";
 import Comment from "../components/Comment.vue";
+
 import MusicCollection from "../components/MusicCollection.vue";
+import axios from "axios";
 
 export default {
   name: "Home",
@@ -120,8 +122,29 @@ export default {
         JSON.stringify(this.myLoveMusicList)
       );
     },
+    //监听当前歌曲ID是否变化，变化时更新封面地址与评论
+    musicID:function(val, oldVal){
+      if(val!==''){
+        // this.cover();
+        this.comment();
+        this.lyric();
+      }
+    },
+    //监听当前MV播放状态，当MV播放时自动暂停当前音乐
+    mvShow:function(val, oldVal){
+      if((val===true)&&this.$store.state.playState===true){
+      this.playNow();
+      }
+    }
+   
   },
   computed: {
+    mvShow:function() {
+      return this.$store.state.mvShow;
+    },
+    musicID:function(){
+      return this.$store.getters.nowMusic.id;
+    },
     musicSrc: function () {
       let src;
       if (!this.$store.getters.nowMusic.src) {
@@ -129,7 +152,6 @@ export default {
       } else {
         src = this.$store.getters.nowMusic.src;
       }
-
       return src;
     },
     musicName: function () {
@@ -186,7 +208,95 @@ export default {
     },
   },
   methods: {
-   
+     // 获取歌曲歌词
+    lyric:function(){  
+      let them=this;
+      axios
+        .get("https://autumnfish.cn/lyric", {
+          params: {
+          id: them.musicID,
+          },
+        })
+        .then(function (response) {
+        // console.log("歌词：");
+        //  console.log(response);
+         const lyric=response.data.lrc.lyric;
+         them.$store.commit("chuangeLyric",lyric);
+        //  console.log(them.$store.state.lyric);
+        })
+        .catch(function (err) {
+          console.log("网络请求出错！错误详情为：");
+          console.log(err);
+        })
+    },
+    //获取歌曲详情，搜索封面 API失效待可用端口
+    // cover:function(){
+    //   let them=this;
+    //   axios
+    //     .get("https://autumnfish.cn/song/detail", {
+    //       params: {
+    //         ids: them.musicID,
+    //       },
+    //     })
+    //     .then(function (response) {
+    //       console.log("歌曲详情：");
+    //       console.log(response);
+    //     })
+    //     .catch(function (err) {
+    //       console.log("网络请求出错！错误详情为：");
+    //       console.log(err);
+    //     });
+    // },
+    //获取歌曲评论
+    comment:function(){  
+      let them=this;
+      axios
+        .get("https://autumnfish.cn/comment/music", {
+          params: {
+            id: them.musicID,
+            limit:them.$store.state.limit,
+          },
+        })
+        .then(function (response) {
+          /* console.log(response) */;
+          const hotComments = response.data.hotComments.map((item) => {
+            const { commentId, user,content,timeStr} = item;
+            return {
+              id:commentId,
+              nickname:user.nickname,
+              imgSrc:user.avatarUrl,
+              content,
+              timeStr
+            };
+        })
+        them.$store.commit('chuangeComment', hotComments)
+        // console.log(them.$store.state.comment);
+        })
+        .catch(function (err) {
+          console.log("网络请求出错！错误详情为：");
+          console.log(err);
+        })
+    },
+    //获取歌曲版权权限状况  API失效待可用端口
+    // canPlay:function(){  
+    //   let them=this;
+    //   axios
+    //     .get("https://autumnfish.cn/check/music", {
+    //       params: {
+    //       id: them.musicID,
+    //       },
+    //     })
+    //     .then(function (response) {
+    //      console.log(response);
+    //     const canPlay=response.success;
+    //     them.$store.commit('chuangeCanPlay', canPlay)
+    //     console.log(them.$store.state.canPlay);
+    //     })
+    //     .catch(function (err) {
+    //       console.log("网络请求出错！错误详情为：");
+    //       console.log(err);
+    //     })
+    // },
     //播放模式设定函数，根据设定的列表焦点输出乱序播放的序号
     playModel: function (index) {
       let indexNext = 0;
@@ -347,6 +457,11 @@ export default {
       const musicDom = this.$refs.musicDom;
       musicDom.load();
     },
+    //暂停音乐播放
+    pause:function(){
+      const musicDom = this.$refs.musicDom;
+      musicDom.pause();
+    },
     //输入id,查询是否在我的喜欢货歌单中 0搜索我的喜欢，1搜索歌单
     queryID: function (id, mode) {
       let state;
@@ -494,6 +609,7 @@ ul {
 }
 
 .musicBox {
+  /* opacity: 90%; */
   position: relative;
   padding-left: 20px;
   padding-right: 20px;
@@ -504,10 +620,10 @@ ul {
   border-radius: 5px;
   background-image: linear-gradient(
     to bottom,
-    #f2f7fc 0%,
-    #f2f7fc 20%,
-    #f7f7f7 32%,
-    #f7f7f7 100%
+    #F2F7FC 0%,
+    #F2F7FC 20%,
+    #fafafa 32%,
+    #fafafa 100%
   );
 }
 .Logo {
