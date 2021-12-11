@@ -1,8 +1,8 @@
 <template>
   <div class="controlStrip">
     <div class="time">
-      {{ $store.state.nusicTime | gshsj }}/{{
-        $store.state.musicLength | gshsj
+      {{ parseInt($store.state.nusicTime) | gshsj }}/{{
+        parseInt($store.state.musicLength) | gshsj
       }}
     </div>
     <div class="jdt">

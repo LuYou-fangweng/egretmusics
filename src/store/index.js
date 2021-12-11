@@ -44,10 +44,16 @@ export default new Vuex.Store({
     comment: [],
 
     lyric:'',//歌词信息
+    lyricShow:false,//歌词显示状态
+    
 
     
   },
   mutations: {
+    //控制歌词显示
+    chuangelyricShow(state){
+      state.lyricShow=!state.lyricShow;
+    },
     //改变遮罩层
     chuangeMvShow:function(state){
       state.mvShow=!state.mvShow;

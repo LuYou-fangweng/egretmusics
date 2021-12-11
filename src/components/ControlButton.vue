@@ -1,6 +1,11 @@
 <template>
   <div class="controlButton">
-    <img :src="require(`../assets/${modeImg}`)" alt="播放模式" class="playOrder" @click="chuangePlayMode">
+    <img
+      :src="require(`../assets/${modeImg}`)"
+      alt="播放模式"
+      class="playOrder"
+      @click="chuangePlayMode"
+    />
     <div class="previous" @click="prev"></div>
     <div
       class="play yuan"
@@ -8,7 +13,11 @@
       @click="$listeners.playNow()"
     ></div>
     <div class="next" @click="next"></div>
-    <div class="contentChanges"></div>
+    <div
+      class="contentChanges"
+      :class="{ contentChangesActive: this.$store.state.lyricShow === true }"
+      @click="chuangelyricShow"
+    ></div>
   </div>
 </template>
 
@@ -21,34 +30,38 @@ export default {
       playState: false,
     };
   },
-  computed:{
-  modeImg:function(){
-    if(this.$store.state.playMode===1){
-      return "顺序播放.svg";
-    }
-    if(this.$store.state.playMode===2){
-      return "循环播放.svg"
-    }
-    if(this.$store.state.playMode===3){
-      return "乱序播放.svg"
-    }
-  }
+  computed: {
+    modeImg: function () {
+      if (this.$store.state.playMode === 1) {
+        return "顺序播放.svg";
+      }
+      if (this.$store.state.playMode === 2) {
+        return "循环播放.svg";
+      }
+      if (this.$store.state.playMode === 3) {
+        return "乱序播放.svg";
+      }
+    },
   },
   methods: {
-     //修改播放播放模式
-    chuangePlayMode:function(){
-      let i=this.$store.state.playMode;
-      if(i<3){
-        i++
-      }else{
-        i=1;
+    //控制歌词是否显示
+    chuangelyricShow: function () {
+      this.$store.commit("chuangelyricShow");
+    },
+    //修改播放播放模式
+    chuangePlayMode: function () {
+      let i = this.$store.state.playMode;
+      if (i < 3) {
+        i++;
+      } else {
+        i = 1;
       }
-      this.$store.commit("chuangePlayMode",i)
+      this.$store.commit("chuangePlayMode", i);
     },
     //上一首
     prev: function () {
-       if(this.$store.state.listMode==3){
-        this.$listeners.prev()
+      if (this.$store.state.listMode == 3) {
+        this.$listeners.prev();
         return;
       }
       if (this.$store.getters.nowIndex > 1) {
@@ -57,8 +70,8 @@ export default {
     },
     //下一首
     next: function () {
-      if(this.$store.state.listMode==3){
-        this.$listeners.next()
+      if (this.$store.state.listMode == 3) {
+        this.$listeners.next();
         return;
       }
       if (this.$store.getters.nowIndex < this.$store.getters.nowLength - 1) {
@@ -76,7 +89,8 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.controlButton div,.controlButton img {
+.controlButton div,
+.controlButton img {
   background-size: contain;
   margin: auto 0px;
 }
@@ -103,11 +117,15 @@ export default {
 }
 .playOrder,
 .contentChanges {
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
+  background-size: contain;
 }
-.playOrder{
-
+.contentChanges{
+  background: url("../assets/歌词未激活 .svg") no-repeat center center;
+}
+.contentChangesActive {
+  background: url("../assets/歌词激活.svg") no-repeat center center;
 }
 
 .previous {

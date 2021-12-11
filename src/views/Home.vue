@@ -28,7 +28,8 @@
         <div class="musicsName">{{ musicName }}</div>
         <div class="albumName">{{ album }}</div>
         <div class="artist">{{ writer }}</div>
-        <AlbumCover class="albumCover"></AlbumCover>
+        <AlbumCover class="albumCover" v-show="this.$store.state.lyricShow!==true"></AlbumCover>
+        <LyricBox calss='lyricBox' v-show="this.$store.state.lyricShow===true"></LyricBox>
       </div>
       <!-- 右侧评论区 -->
       <div class="right">
@@ -93,7 +94,7 @@ import ControlStrip from "@/components/ControlStrip.vue";
 import GainController from "../components/GainController.vue";
 import AlbumCover from "../components/AlbumCover.vue";
 import Comment from "../components/Comment.vue";
-
+import LyricBox from "../components/LyricBox.vue";
 import MusicCollection from "../components/MusicCollection.vue";
 import axios from "axios";
 
@@ -108,6 +109,7 @@ export default {
     AlbumCover,
     Comment,
     MusicCollection,
+    LyricBox,
   },
   data() {
     return {
@@ -223,6 +225,7 @@ export default {
          const lyric=response.data.lrc.lyric;
          them.$store.commit("chuangeLyric",lyric);
         //  console.log(them.$store.state.lyric);
+         
         })
         .catch(function (err) {
           console.log("网络请求出错！错误详情为：");
@@ -525,17 +528,17 @@ export default {
   },
   beforeMount: function () {
     // 在视图渲染前，将硬盘中的c存储的歌单写入musicList中；
-    // let myLoveMusicList = JSON.parse(
-    //   window.localStorage.getItem("myLoveMusicList")
-    // );
-    // if (myLoveMusicList) {
-    //   this.$store.state.myLoveMusicList = myLoveMusicList;
-    // }
+    let myLoveMusicList = JSON.parse(
+      window.localStorage.getItem("myLoveMusicList")
+    );
+    if (myLoveMusicList) {
+      this.$store.state.myLoveMusicList = myLoveMusicList;
+    }
 
-    // let musicLists = JSON.parse(window.localStorage.getItem("musicLists"));
-    // if (musicLists) {
-    //   this.$store.state.musicList = musicLists;
-    // }
+    let musicLists = JSON.parse(window.localStorage.getItem("musicLists"));
+    if (musicLists) {
+      this.$store.state.musicList = musicLists;
+    }
      //设置初始播放模式；
     this.$store.commit("chuangePlayMode",1);
     // this.$store.state.playMode=2;
@@ -550,13 +553,13 @@ export default {
     musicDom.volume = this.$store.state.volume;
     //audio标签重载SRC时，返回歌曲总时长
     musicDom.onloadedmetadata = () => {
-      this.$store.commit("chuangeMusicLength", parseInt(musicDom.duration));
+      this.$store.commit("chuangeMusicLength", musicDom.duration);
     };
     //设置初始状态音量
     this.chuangeVolume(0.45);
     //audio标签重每秒更新播放进度
     musicDom.ontimeupdate = () => {
-      this.$store.commit("chuangenusicTime", parseInt(musicDom.currentTime));
+      this.$store.commit("chuangenusicTime", musicDom.currentTime);
     };
     //根据播放模式设置，决定是循序播放(1)、单曲循环()2、乱序播放(3)
     musicDom.onended = () => {
@@ -644,6 +647,7 @@ ul {
 .center {
   width: 600px;
   height: 480px;
+  position: relative;;
 }
 .right {
   width: 240px;
@@ -691,6 +695,12 @@ ul {
 .albumCover {
   margin: 0px auto;
   margin-top: 50px;
+}
+.lyricBox{
+  position:absolute;
+  top:0px;
+  left: 50%;
+  transform: translate(-50%,120px);
 }
 .artist {
   height: 20px;
