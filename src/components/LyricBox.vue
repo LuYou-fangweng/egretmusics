@@ -106,7 +106,7 @@ export default {
   padding: 0px;
 }
 /* Vuex 列表动画设置 */
-.v-enter,
+/* .v-enter,
 .v-leave-to {
   opacity: 0;
   transform: translateY(80px);
@@ -115,19 +115,19 @@ export default {
 .v-enter-active,
 .v-leave-active {
   transition: all 0.4s;
-}
+} */
 
 /* 下面的 .v-move 和 .v-leave-active 配合使用，能够实现列表后续的元素，渐渐地漂上来的效果
     */
-.v-move {
+/* .v-move {
   transition: all 0.6s ease;
 }
 .v-leave-active {
   position: absolute;
-}
+} */
 
 .lyricBox {
-  width: 400px;
+  width: 600px;
   height: 360px;
   overflow: hidden;
 }
@@ -136,7 +136,7 @@ transform: translateY(0px);
 }
 .lyricBox li {
   min-height: 40px;
-  font: 400 20px/20px 楷体;
+  font: 400 20px/40px 楷体;
   color: rgb(116, 116, 116);
 }
 .lyricActive {

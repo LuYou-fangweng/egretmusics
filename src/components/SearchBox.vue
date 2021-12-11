@@ -47,19 +47,21 @@ export default {
           // console.log(t);
 
           const searchMusicList = response.data.result.songs.map((item) => {
-            const { name: musicName, id, artists, album,mvid } = item;
+            let cname=item.artists.map(function(itemw){return itemw.name}).join(" ");
+            const { name: musicName, id, album,mvid } = item;
             return {
               id,
               musicName,
               album: album.name,
-              writer: artists[0].name,
+              writer: cname,
               src: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
               mvid
             };
           });
-          searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" });
+          searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" ,mvid:''});
+
           them.$store.commit("assignment", searchMusicList);
-          /* console.log(them.$store.state.networkMusicList); */
+          // console.log(them.$store.state.networkMusicList);
           //将网络歌单焦点设置为1
           them.$store.commit("changeNetWorkIndex",1);
           // them.$emit("changeSRC");
