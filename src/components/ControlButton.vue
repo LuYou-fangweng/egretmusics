@@ -117,8 +117,8 @@ export default {
 }
 .playOrder,
 .contentChanges {
-  height: 35px;
-  width: 35px;
+  height: 25px;
+  width: 25px;
   background-size: contain;
 }
 .contentChanges{

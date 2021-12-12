@@ -64,11 +64,13 @@ export default {
       arr.pop();
       let arr_lyric = [];
       let index = 0;
-      let timeStr, lyrictext, timeArr, time;
+      let pattern = /\[\d{2}:\d{2}.\d{2,3}\]/g
+      let timeStr, lyrictext, timeArr, time,length;
       for (let item of arr) {
-        timeStr = item.slice(0, 11);
-        lyrictext = item.slice(11);
-        timeArr = timeStr.slice(1, -1).split(":");
+        timeStr = item.match(pattern);
+        // console.log(timeStr);
+        lyrictext = item.slice(timeStr[0].length);
+        timeArr = timeStr[0].slice(1, -1).split(":");
         time = Number(timeArr[0]) * 60 + Number(timeArr[1]);
         arr_lyric.push({
           index: index,
@@ -83,7 +85,7 @@ export default {
         arr_lyric[i].endTime = arr_lyric[i + 1].enterTime;
       }
       arr_lyric[l - 1].endTime = this.$store.state.musicLength;
-      // console.log(arr_lyric);
+      console.log(arr_lyric);
       return arr_lyric;
     },
   },
