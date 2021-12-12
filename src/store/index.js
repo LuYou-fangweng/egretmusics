@@ -50,6 +50,10 @@ export default new Vuex.Store({
     
   },
   mutations: {
+    //给封面地址赋值
+    chuageMusicCover(state,value){
+    state.musicCover=value;
+    },
     //控制歌词显示
     chuangelyricShow(state){
       state.lyricShow=!state.lyricShow;

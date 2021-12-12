@@ -127,7 +127,7 @@ export default {
     //监听当前歌曲ID是否变化，变化时更新封面地址与评论
     musicID:function(val, oldVal){
       if(val!==''){
-        // this.cover();
+        this.cover();
         this.comment();
         this.lyric();
       }
@@ -141,6 +141,10 @@ export default {
    
   },
   computed: {
+    //专辑封面ID
+    coverID:function(){
+      return this.$store.getters.nowMusic.coverID
+    },
     mvShow:function() {
       return this.$store.state.mvShow;
     },
@@ -232,24 +236,28 @@ export default {
           console.log(err);
         })
     },
-    //获取歌曲详情，搜索封面 API失效待可用端口
-    // cover:function(){
-    //   let them=this;
-    //   axios
-    //     .get("https://autumnfish.cn/song/detail", {
-    //       params: {
-    //         ids: them.musicID,
-    //       },
-    //     })
-    //     .then(function (response) {
-    //       console.log("歌曲详情：");
-    //       console.log(response);
-    //     })
-    //     .catch(function (err) {
-    //       console.log("网络请求出错！错误详情为：");
-    //       console.log(err);
-    //     });
-    // },
+    //获取歌曲详情
+    cover:function(){
+      let them=this;
+      axios
+        .get("https://autumnfish.cn/album", {
+          params: {
+            id: them.coverID,
+          },
+        })
+        .then(function (response) {
+          // console.log("歌曲详情：");
+          // console.log(response);
+          let url=response.data.album.blurPicUrl;
+          // console.log(url);
+          them.$store.commit("chuageMusicCover",url)
+          // console.log(them.$store.state.musicCover);
+        })
+        .catch(function (err) {
+          console.log("网络请求出错！错误详情为：");
+          console.log(err);
+        });
+    },
     //获取歌曲评论
     comment:function(){  
       let them=this;

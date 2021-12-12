@@ -26,7 +26,7 @@ export default {
   computed:{
   coverSrc:function(){
     let src=require('../assets/默认封面.png');
-    if(!(this.$store.state.musicCover===''||this.$store.state.musicCover)){
+    if(this.$store.state.musicCover!==''){
       src=this.$store.state.musicCover;
     }
     return src;
