@@ -9,7 +9,7 @@
       <!-- logo -->
       <div class="Logo">白鹭播放器</div>
       <!-- 搜索框组件 -->
-      <SearchBox @changeSRC="changeSRC"></SearchBox>
+      <SearchBox @changeSRC="changeSRC" @pause="pause"></SearchBox>
       <div class="a"></div>
     </div>
     <!-- 播放器中部内容 -->
@@ -467,10 +467,12 @@ export default {
     changeSRC: function () {
       const musicDom = this.$refs.musicDom;
       musicDom.load();
+      
     },
     //暂停音乐播放
     pause:function(){
       const musicDom = this.$refs.musicDom;
+      this.$store.state.playState = false;
       musicDom.pause();
     },
     //输入id,查询是否在我的喜欢货歌单中 0搜索我的喜欢，1搜索歌单

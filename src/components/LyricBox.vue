@@ -85,7 +85,7 @@ export default {
         arr_lyric[i].endTime = arr_lyric[i + 1].enterTime;
       }
       arr_lyric[l - 1].endTime = this.$store.state.musicLength;
-      console.log(arr_lyric);
+      // console.log(arr_lyric);
       return arr_lyric;
     },
   },

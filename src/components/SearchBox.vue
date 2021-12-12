@@ -60,11 +60,17 @@ export default {
             };
           });
           searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" ,mvid:'',coverID:''});
-
+          //若歌曲焦点在网络歌单而且在播放时，暂停播放
+          
           them.$store.commit("assignment", searchMusicList);
           // console.log(them.$store.state.networkMusicList);
           //将网络歌单焦点设置为1
           them.$store.commit("changeNetWorkIndex",1);
+          if(them.$store.state.listMode===1){
+            them.$emit("pause");
+            them.$emit("changeSRC");
+          }
+          
         })
         .catch(function (err) {
           console.log("网络请求出错！错误详情为：");
