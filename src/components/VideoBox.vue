@@ -32,8 +32,8 @@ export default {
 <style scoped>
 .vidioBox {
   position: relative;
-  width: 1980px;
-  height: 1080px;
+  width: 1900px;
+  height: 800px;
 }
 .vidio {
   width: 1280px;
@@ -44,7 +44,7 @@ export default {
   transform: translate(-50%, -50%);
 }
 .mask {
-  height: 1080px;
+  height: 800px;
   margin: 0px auto;
   background-color: rgba(50, 64, 90, 0.192);
 }

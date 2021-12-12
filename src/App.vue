@@ -33,13 +33,14 @@ export default {
   left: 50%;
   transform: translate(-50%);
   position: absolute;
-  top:-90px;
+  top:50px;
+
   
 }
 .background{
   position:absolute;
-  width: 1980px;
-  height:1080px;
+  width: 1930px;
+  height:1040px;
   top: -108px;
   left: 50%;
   transform: translate(-50%, 0%);
