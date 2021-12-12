@@ -48,14 +48,14 @@ export default {
 <style scoped>
 .controlStrip {
   display: flex;
-  height: 36px;
+  height: 24px;
 }
 .time {
   width: 85px;
   height: 18px;
 }
 .jdt {
-  margin-top: 9px;
+  margin-top: 5px;
   position: relative;
   width: 550px;
   height: 6px;

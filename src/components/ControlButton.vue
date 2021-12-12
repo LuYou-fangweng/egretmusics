@@ -84,7 +84,7 @@ export default {
 
 <style scoped>
 .controlButton {
-  height: 64px;
+  height: 76px;
   width: 260px;
   display: flex;
   justify-content: space-around;

@@ -618,9 +618,9 @@ ul {
   padding-right: 20px;
   padding-top: 10px;
   width: 1080px;
-  height: 620px;
+  /* height: 620px; */
   box-shadow: 0px 0px 3px 3px rgba(119, 119, 119, 0.527);
-  border-radius: 5px;
+  border-radius: 10px;
   background-image: linear-gradient(
     to bottom,
     #F2F7FC 0%,
