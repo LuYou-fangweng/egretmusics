@@ -46,7 +46,7 @@
               {{ item.musicName }}
             </div>
             <img
-              src="../assets/歌曲图标.svg"
+              src="../assets/SVG.svg"
               class="video"
               v-show="item.mvid != 0"
               @click="MV(item.mvid)"
@@ -78,7 +78,7 @@
               {{ item.musicName }}
             </div>
             <img
-              src="../assets/歌曲图标.svg"
+              src="../assets/SVG.svg"
               class="video"
               v-show="item.mvid != 0"
               @click="MV(item.mvid)"
@@ -121,7 +121,7 @@
                     {{ item_1.musicName }}
                   </div>
                   <img
-                    src="../assets/歌曲图标.svg"
+                    src="../assets/SVG.svg"
                     class="video"
                     v-show="item_1.mvid != 0"
                     @click="MV(item_1.mvid)"
@@ -467,5 +467,9 @@ img {
 }
 .collectList li:nth-child(1) .deletList {
   display: none;
+}
+.video:hover{
+  background: url("../assets/MV激活.svg") no-repeat center center;
+  background-size: 100% 100%;
 }
 </style>

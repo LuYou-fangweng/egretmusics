@@ -65,13 +65,13 @@ export default {
       let arr_lyric = [];
       let index = 0;
       let pattern = /\[\d{2}:\d{2}.\d{2,3}\]/g
-      let timeStr, lyrictext, timeArr, time,length;
+      let timeStr, lyrictext, timeArr, time;
       for (let item of arr) {
         timeStr = item.match(pattern);
         // console.log(timeStr);
         lyrictext = item.slice(timeStr[0].length);
         timeArr = timeStr[0].slice(1, -1).split(":");
-        time = Number(timeArr[0]) * 60 + Number(timeArr[1]);
+        time = Number(timeArr[0]) * 60 + Number(timeArr[1]);-
         arr_lyric.push({
           index: index,
           enterTime: time,

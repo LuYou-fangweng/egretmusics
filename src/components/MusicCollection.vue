@@ -42,6 +42,13 @@ export default {
       musicListName: "",
     };
   },
+  computed:{
+   listNames:function(){
+    return this.$store.state.musicList.map((item)=>{
+      return item.name;
+      })
+   }
+  },
   methods: {
     //关闭歌单添加框
     $_notShowBox:function(){
@@ -50,6 +57,11 @@ export default {
     //将焦点歌曲添加至新增歌单
     $_addMusics: function () {
       let newList = {};
+      if(this.listNames.includes(this.musicListName)){
+        alert("该歌单名以存在！请勿重复！");
+        this.musicListName = "";
+        return;
+      }
       newList.name = this.musicListName;
       newList.listMusic = [this.$store.getters.nowMusic];
       newList.id=Date.now().toString(36);
