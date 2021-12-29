@@ -31,21 +31,27 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .vidioBox {
-  position: relative;
-  width: 1900px;
-  height: 800px;
+  position: fixed;
+  width: 100vw;
+  height:100vh;
+  top:0px;
+  left: 0px;
 }
 .vidio {
   width: 1280px;
   height: 720px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 .mask {
-  height: 800px;
-  margin: 0px auto;
-  background-color: rgba(50, 64, 90, 0.192);
+  width: 100vw;
+  height: 80vh;
+  position: fixed;
+  top: 50%;
+  left: 0%;
+  transform: translate(0, -50%);
+  background-color: rgba(50, 64, 90, 0.2);
 }
 </style>

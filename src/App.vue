@@ -29,24 +29,23 @@ export default {
 .router {
   margin: 10px auto;
 }
-.boxBox {
+/* .boxBox {
   left: 50%;
   transform: translate(-50%);
   position: absolute;
   top:50px;
-
-  
-}
+} */
 .background{
-  position:absolute;
-  width: 1930px;
-  height:1040px;
-  top: -108px;
-  left: 50%;
-  transform: translate(-50%, 0%);
+  position:fixed;
+  width: 100vw;
+  height:100vh;
+  top: 0;
+  left: 0;
   background: url("./assets/背景1.png") no-repeat;
    filter: blur(15px);
-   transition: all 1.5s ease;
+   transition: all 0.5s ease;
+  object-fit: cover;
+  /* transform: translateZ(10px); */
 
 }
 .backgroundActive{
@@ -59,6 +58,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   position: relative;
+  /* perspective: 20px; */
 }
 
 #nav {
