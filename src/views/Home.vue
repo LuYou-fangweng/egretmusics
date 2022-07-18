@@ -87,19 +87,19 @@
 
 <script>
 // @ is an alias to /src
-import MusicList from "@/components/MusicList.vue";
-import SearchBox from "@/components/SearchBox.vue";
-import ControlButton from "@/components/ControlButton.vue";
-import ControlStrip from "@/components/ControlStrip.vue";
-import GainController from "../components/GainController.vue";
-import AlbumCover from "../components/AlbumCover.vue";
-import Comment from "../components/Comment.vue";
-import LyricBox from "../components/LyricBox.vue";
-import MusicCollection from "../components/MusicCollection.vue";
-import axios from "axios";
+import MusicList from '@/components/MusicList.vue'
+import SearchBox from '@/components/SearchBox.vue'
+import ControlButton from '@/components/ControlButton.vue'
+import ControlStrip from '@/components/ControlStrip.vue'
+import GainController from '../components/GainController.vue'
+import AlbumCover from '../components/AlbumCover.vue'
+import Comment from '../components/Comment.vue'
+import LyricBox from '../components/LyricBox.vue'
+import MusicCollection from '../components/MusicCollection.vue'
+import axios from 'axios'
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     MusicList,
     SearchBox,
@@ -109,187 +109,186 @@ export default {
     AlbumCover,
     Comment,
     MusicCollection,
-    LyricBox,
+    LyricBox
   },
-  data() {
+  data () {
     return {
-      showAddListBox: false,
-    };
+      showAddListBox: false
+    }
   },
   watch: {
-    //监听我的喜欢列表，变动后将列表数据存入硬盘
+    // 监听我的喜欢列表，变动后将列表数据存入硬盘
     myLoveMusicList: function () {
       window.localStorage.setItem(
-        "myLoveMusicList",
+        'myLoveMusicList',
         JSON.stringify(this.myLoveMusicList)
-      );
+      )
     },
-    //监听当前歌曲ID是否变化，变化时更新封面地址与评论
-    musicID:function(val, oldVal){
-      if(val!==''){
-        this.cover();
-        this.comment();
-        this.lyric();
+    // 监听当前歌曲ID是否变化，变化时更新封面地址与评论
+    musicID: function (val, oldVal) {
+      if (val !== '') {
+        this.cover()
+        this.comment()
+        this.lyric()
       }
     },
-    //监听当前MV播放状态，当MV播放时自动暂停当前音乐
-    mvShow:function(val, oldVal){
-      if((val===true)&&this.$store.state.playState===true){
-      this.playNow();
+    // 监听当前MV播放状态，当MV播放时自动暂停当前音乐
+    mvShow: function (val, oldVal) {
+      if ((val === true) && this.$store.state.playState === true) {
+        this.playNow()
       }
     }
-   
+
   },
   computed: {
-    //专辑封面ID
-    coverID:function(){
+    // 专辑封面ID
+    coverID: function () {
       return this.$store.getters.nowMusic.coverID
     },
-    mvShow:function() {
-      return this.$store.state.mvShow;
+    mvShow: function () {
+      return this.$store.state.mvShow
     },
-    musicID:function(){
-      return this.$store.getters.nowMusic.id;
+    musicID: function () {
+      return this.$store.getters.nowMusic.id
     },
     musicSrc: function () {
-      let src;
+      let src
       if (!this.$store.getters.nowMusic.src) {
-        src = "";
+        src = ''
       } else {
-        src = this.$store.getters.nowMusic.src;
+        src = this.$store.getters.nowMusic.src
       }
-      return src;
+      return src
     },
     musicName: function () {
-      let musicName = this.$store.getters.nowMusic.musicName;
-      return musicName;
+      const musicName = this.$store.getters.nowMusic.musicName
+      return musicName
     },
     album: function () {
-      let album = this.$store.getters.nowMusic.album;
-      return album;
+      const album = this.$store.getters.nowMusic.album
+      return album
     },
     writer: function () {
-      let writer = this.$store.getters.nowMusic.writer;
-      return writer;
+      const writer = this.$store.getters.nowMusic.writer
+      return writer
     },
     myLoveMusicList: function () {
-      let m = this.$store.state.myLoveMusicList;
-      return m;
+      const m = this.$store.state.myLoveMusicList
+      return m
     },
-    //歌单
+    // 歌单
     musicList: function () {
-      let m = this.$store.state.musicList;
-      return m;
+      const m = this.$store.state.musicList
+      return m
     },
-    //当前收藏歌单焦点所在的子歌单
+    // 当前收藏歌单焦点所在的子歌单
     musicListNowChild: function () {
-      let c =
+      const c =
         this.$store.state.musicList[this.$store.state.collectionIndex[0]]
-          .listMusic;
-      return c;
+          .listMusic
+      return c
     },
-    //歌单序号、所在歌曲序号
+    // 歌单序号、所在歌曲序号
     collectionIndex: function () {
-      return this.$store.state.collectionIndex;
+      return this.$store.state.collectionIndex
     },
-    //焦点歌曲是否在我的喜欢中，以此决定按钮图片
+    // 焦点歌曲是否在我的喜欢中，以此决定按钮图片
     loveState: function () {
-      let url;
+      let url
       if (this.queryID(this.$store.getters.nowMusic.id, 0)) {
-        url = "已喜欢.svg";
+        url = '已喜欢.svg'
       } else {
-        url = "喜欢.svg";
+        url = '喜欢.svg'
       }
-      return url;
+      return url
     },
-    //焦点歌曲是否在歌单中
+    // 焦点歌曲是否在歌单中
     listState: function () {
-      let url;
+      let url
       if (this.queryID(this.$store.getters.nowMusic.id, 1)) {
-        url = "已收藏.svg";
+        url = '已收藏.svg'
       } else {
-        url = "收藏.svg";
+        url = '收藏.svg'
       }
-      return url;
-    },
+      return url
+    }
   },
   methods: {
-     // 获取歌曲歌词
-    lyric:function(){  
-      let them=this;
+    // 获取歌曲歌词
+    lyric: function () {
+      const them = this
       axios
-        .get("https://autumnfish.cn/lyric", {
+        .get('https://autumnfish.cn/lyric', {
           params: {
-          id: them.musicID,
-          },
+            id: them.musicID
+          }
         })
         .then(function (response) {
         // console.log("歌词：");
         //  console.log(response);
-         const lyric=response.data.lrc.lyric;
-         them.$store.commit("chuangeLyric",lyric);
-        //  console.log(them.$store.state.lyric);
-         
+          const lyric = response.data.lrc.lyric
+          them.$store.commit('chuangeLyric', lyric)
+          //  console.log(them.$store.state.lyric);
         })
         .catch(function (err) {
-          console.log("网络请求出错！错误详情为：");
-          console.log(err);
+          console.log('网络请求出错！错误详情为：')
+          console.log(err)
         })
     },
-    //获取歌曲详情
-    cover:function(){
-      let them=this;
+    // 获取歌曲详情
+    cover: function () {
+      const them = this
       axios
-        .get("https://autumnfish.cn/album", {
+        .get('https://autumnfish.cn/album', {
           params: {
-            id: them.coverID,
-          },
+            id: them.coverID
+          }
         })
         .then(function (response) {
           // console.log("歌曲详情：");
           // console.log(response);
-          let url=response.data.album.blurPicUrl;
+          const url = response.data.album.blurPicUrl
           // console.log(url);
-          them.$store.commit("chuageMusicCover",url)
+          them.$store.commit('chuageMusicCover', url)
           // console.log(them.$store.state.musicCover);
         })
         .catch(function (err) {
-          console.log("网络请求出错！错误详情为：");
-          console.log(err);
-        });
+          console.log('网络请求出错！错误详情为：')
+          console.log(err)
+        })
     },
-    //获取歌曲评论
-    comment:function(){  
-      let them=this;
+    // 获取歌曲评论
+    comment: function () {
+      const them = this
       axios
-        .get("https://autumnfish.cn/comment/music", {
+        .get('https://autumnfish.cn/comment/music', {
           params: {
             id: them.musicID,
-            limit:them.$store.state.limit,
-          },
+            limit: them.$store.state.limit
+          }
         })
         .then(function (response) {
           /* console.log(response) */;
           const hotComments = response.data.hotComments.map((item) => {
-            const { commentId, user,content,timeStr} = item;
+            const { commentId, user, content, timeStr } = item
             return {
-              id:commentId,
-              nickname:user.nickname,
-              imgSrc:user.avatarUrl,
+              id: commentId,
+              nickname: user.nickname,
+              imgSrc: user.avatarUrl,
               content,
               timeStr
-            };
-        })
-        them.$store.commit('chuangeComment', hotComments)
+            }
+          })
+          them.$store.commit('chuangeComment', hotComments)
         // console.log(them.$store.state.comment);
         })
         .catch(function (err) {
-          console.log("网络请求出错！错误详情为：");
-          console.log(err);
+          console.log('网络请求出错！错误详情为：')
+          console.log(err)
         })
     },
-    //获取歌曲版权权限状况  API失效待可用端口
-    // canPlay:function(){  
+    // 获取歌曲版权权限状况  API失效待可用端口
+    // canPlay:function(){
     //   let them=this;
     //   axios
     //     .get("https://autumnfish.cn/check/music", {
@@ -308,24 +307,24 @@ export default {
     //       console.log(err);
     //     })
     // },
-    //播放模式设定函数，根据设定的列表焦点输出乱序播放的序号
+    // 播放模式设定函数，根据设定的列表焦点输出乱序播放的序号
     playModel: function (index) {
-      let indexNext = 0;
+      let indexNext = 0
       switch (index) {
         case 1:
         case 2: {
           if (this.$store.getters.nowLength !== 1) {
             indexNext = Math.ceil(
               (this.$store.getters.nowLength - 1) * Math.random()
-            );
+            )
           }
-          break;
+          break
         }
         case 3: {
-          let inde = Math.floor(
+          const inde = Math.floor(
             this.$store.getters.listID.length * Math.random()
-          );
-          let id=this.$store.getters.listID[inde]
+          )
+          const id = this.$store.getters.listID[inde]
           for (let i = 0; i < this.$store.state.musicList.length; i++) {
             for (
               let j = 0;
@@ -333,286 +332,292 @@ export default {
               j++
             ) {
               if (this.$store.state.musicList[i].listMusic[j].id === id) {
-                indexNext = [i, j];
-                break;
+                indexNext = [i, j]
+                break
               }
             }
           }
-          break;
+          break
         }
         default:
-          console.length("列表焦点错误！");
+          console.length('列表焦点错误！')
       }
-      return indexNext;
+      return indexNext
     },
-    //显示歌单添加框map
+    // 显示歌单添加框map
     showAddBbox: function () {
-      this.$store.commit("showAddListBox");
+      this.$store.commit('showAddListBox')
     },
-    //更新audio标签的音量与音量数据同步
+    // 更新audio标签的音量与音量数据同步
     audioTb: function () {
-      const musicDom = this.$refs.musicDom; //导入audio标签
-      //音量数据改变时触发实时修改播放器音量
-      musicDom.volume = this.$store.state.volume;
+      const musicDom = this.$refs.musicDom // 导入audio标签
+      // 音量数据改变时触发实时修改播放器音量
+      musicDom.volume = this.$store.state.volume
     },
 
-    //获取鼠标点击进度条事件，改变歌曲播放进度
+    // 获取鼠标点击进度条事件，改变歌曲播放进度
     changeTime: function (e) {
-      const musicDom = this.$refs.musicDom;
-      let x = (e.offsetX / 550) * this.$store.state.musicLength;
-      musicDom.currentTime = x;
+      const musicDom = this.$refs.musicDom
+      const x = (e.offsetX / 550) * this.$store.state.musicLength
+      musicDom.currentTime = x
     },
     // 播放或暂停当前焦点歌曲
     playNow: function () {
-      const musicDom = this.$refs.musicDom;
+
+      const musicDom = this.$refs.musicDom
       if (this.$store.state.playState == false) {
-        this.$store.state.playState = true;
+        if(this.musicID===''){
+          return;
+        }
+        this.$store.state.playState = true
         /* musicDom.load(); */
-        musicDom.play();
+        musicDom.play()
         /* console.log("正在尝试播放"); */
-        this.log();
+        this.log()
       } else {
-        this.$store.state.playState = false;
-        musicDom.pause();
+        this.$store.state.playState = false
+        musicDom.pause()
       }
     },
-    //下一首
+    // 下一首
     next: function () {
-      const musicDom = this.$refs.musicDom;
+      const musicDom = this.$refs.musicDom
       if (this.$store.state.listMode === 1) {
-        this.$store.state.networkIndex++;
+        this.$store.state.networkIndex++
       }
       if (this.$store.state.listMode === 2) {
-        this.$store.state.myLoveIndex++;
+        this.$store.state.myLoveIndex++
       }
       if (this.$store.state.listMode === 3) {
-        let i = [];
-        i[0] = this.collectionIndex[0];
-        i[1] = this.collectionIndex[1];
+        const i = []
+        i[0] = this.collectionIndex[0]
+        i[1] = this.collectionIndex[1]
         if (this.collectionIndex[1] < this.musicListNowChild.length - 1) {
-          i[1] += 1;
+          i[1] += 1
         } else {
           if (this.collectionIndex[0] < this.musicList.length - 1) {
-            i[1] = 0;
-            i[0]++;
+            i[1] = 0
+            i[0]++
           } else {
-            return;
+            return
           }
         }
-        this.$store.commit("chuangeCollectionIndex", i);
+        this.$store.commit('chuangeCollectionIndex', i)
       }
-      musicDom.load();
-      musicDom.play();
-      this.$store.state.playState = true;
-      this.log();
+      musicDom.load()
+      musicDom.play()
+      this.$store.state.playState = true
+      this.log()
     },
 
-    //上一首
+    // 上一首
     prev: function () {
       if (this.$store.state.listMode === 1) {
-        this.$store.state.networkIndex--;
+        this.$store.state.networkIndex--
       }
       if (this.$store.state.listMode === 2) {
-        this.$store.state.myLoveIndex--;
+        this.$store.state.myLoveIndex--
       }
       if (this.$store.state.listMode === 3) {
         // this.$store.state.collectionIndex[1]--;
-        let i = [];
-        i[0] = this.collectionIndex[0];
-        i[1] = this.collectionIndex[1];
+        const i = []
+        i[0] = this.collectionIndex[0]
+        i[1] = this.collectionIndex[1]
         if (this.collectionIndex[1] > 0) {
-          i[1] -= 1;
+          i[1] -= 1
         } else {
           if (this.collectionIndex[0] > 0) {
-            i[0]--;
-            i[1] = this.$store.state.musicList[i[0]].listMusic.length - 1;
+            i[0]--
+            i[1] = this.$store.state.musicList[i[0]].listMusic.length - 1
           } else {
-            return;
+            return
           }
         }
-        this.$store.commit("chuangeCollectionIndex", i);
+        this.$store.commit('chuangeCollectionIndex', i)
       }
-      const musicDom = this.$refs.musicDom;
-      musicDom.load();
-      musicDom.play();
-      this.$store.state.playState = true;
-      this.log();
+      const musicDom = this.$refs.musicDom
+      musicDom.load()
+      musicDom.play()
+      this.$store.state.playState = true
+      this.log()
     },
-    //播放选定库曲目(网络与本地与收藏)
+    // 播放选定库曲目(网络与本地与收藏)
     playThis: function (listMode, index) {
       if (listMode === 1) {
-        this.$store.state.networkIndex = index;
+        this.$store.state.networkIndex = index
       }
       if (listMode === 2) {
-        this.$store.state.myLoveIndex = index;
+        this.$store.state.myLoveIndex = index
       }
       if (listMode === 3) {
-        this.$store.state.collectionIndex = index;
+        this.$store.state.collectionIndex = index
       }
-      this.$store.state.listMode = listMode;
-      const musicDom = this.$refs.musicDom;
-      musicDom.load();
-      musicDom.play();
-      this.$store.state.playState = true;
-      this.log();
+      this.$store.state.listMode = listMode
+      const musicDom = this.$refs.musicDom
+      musicDom.load()
+      musicDom.play()
+      this.$store.state.playState = true
+      this.log()
     },
-    //删除当前播放歌曲时暂停播放并重载SRC
+    // 删除当前播放歌曲时暂停播放并重载SRC
     resetSrc: function () {
-      const musicDom = this.$refs.musicDom;
-      musicDom.pause();
-      this.$store.state.playState = false;
-      musicDom.load();
+      const musicDom = this.$refs.musicDom
+      musicDom.pause()
+      this.$store.state.playState = false
+      musicDom.load()
     },
-    //重载播放器SRC
+    // 重载播放器SRC
     changeSRC: function () {
-      const musicDom = this.$refs.musicDom;
-      musicDom.load();
-      
+      const musicDom = this.$refs.musicDom
+      musicDom.load()
     },
-    //暂停音乐播放
-    pause:function(){
-      const musicDom = this.$refs.musicDom;
-      this.$store.state.playState = false;
-      musicDom.pause();
+    // 暂停音乐播放
+    pause: function () {
+      const musicDom = this.$refs.musicDom
+      this.$store.state.playState = false
+      musicDom.pause()
     },
-    //输入id,查询是否在我的喜欢货歌单中 0搜索我的喜欢，1搜索歌单
+    // 输入id,查询是否在我的喜欢货歌单中 0搜索我的喜欢，1搜索歌单
     queryID: function (id, mode) {
-      let state;
+      let state
       if (mode === 0) {
-        state = this.$store.getters.loveID.includes(id);
+        state = this.$store.getters.loveID.includes(id)
       } else {
-        state = this.$store.getters.listID.includes(id);
+        state = this.$store.getters.listID.includes(id)
       }
-      return state;
+      return state
     },
-    //点击右下角喜欢图标，焦点歌曲未收藏则收藏，已收藏则取消收藏
+    // 点击右下角喜欢图标，焦点歌曲未收藏则收藏，已收藏则取消收藏
     loveButton: function () {
       if (this.queryID(this.$store.getters.nowMusic.id, 0) === false) {
-        this.$store.commit("addNowToLoveList", this.$store.getters.nowMusic);
+        this.$store.commit('addNowToLoveList', this.$store.getters.nowMusic)
       } else {
-        const Musiclist = this.$refs.Musiclist;
-        let idIndex = this.$store.getters.loveID.indexOf(
+        const Musiclist = this.$refs.Musiclist
+        const idIndex = this.$store.getters.loveID.indexOf(
           this.$store.getters.nowMusic.id
-        );
-        Musiclist.$_removeLoveMusic(idIndex);
+        )
+        Musiclist.$_removeLoveMusic(idIndex)
       }
     },
-    //显示当前焦点歌曲的歌单。序号、路径
+    // 显示当前焦点歌曲的歌单。序号、路径
     log: function () {
       switch (this.$store.state.listMode) {
         case 1: {
           console.log(
-            "正在播放的歌曲为：网络歌曲：" + this.$store.state.networkIndex
-          );
-          console.log("路径为：" + this.musicSrc);
-          break;
+            '正在播放的歌曲为：网络歌曲：' + this.$store.state.networkIndex
+          )
+          console.log('路径为：' + this.musicSrc)
+          break
         }
         case 2: {
           console.log(
-            "正在播放的歌曲为：我的喜欢：" + this.$store.state.myLoveIndex
-          );
-          console.log("路径为：" + this.musicSrc);
-          break;
+            '正在播放的歌曲为：我的喜欢：' + this.$store.state.myLoveIndex
+          )
+          console.log('路径为：' + this.musicSrc)
+          break
         }
         case 3: {
           console.log(
-            "正在播放的歌曲为：" +
+            '正在播放的歌曲为：' +
               this.$store.state.musicList[this.$store.state.collectionIndex[0]]
                 .name +
-              ":" +
+              ':' +
               this.$store.state.collectionIndex[1]
-          );
-          console.log("路径为：" + this.musicSrc);
-          break;
+          )
+          console.log('路径为：' + this.musicSrc)
+          break
         }
         default:
-          console.log("状态代码出错！");
+          console.log('状态代码出错！')
       }
     },
     chuangeVolume: function (value) {
-      this.$store.commit("chuangeVolume", value);
-    },
+      this.$store.commit('chuangeVolume', value)
+    }
   },
 
   crearte: function () {
   },
   beforeMount: function () {
-    // 在视图渲染前，将硬盘中的c存储的歌单写入musicList中；
-    let myLoveMusicList = JSON.parse(
-      window.localStorage.getItem("myLoveMusicList")
-    );
+    // 在视图渲染前，将硬盘中存储的歌单写入musicList中；
+    const myLoveMusicList = JSON.parse(
+      window.localStorage.getItem('myLoveMusicList')
+    )
     if (myLoveMusicList) {
-      this.$store.state.myLoveMusicList = myLoveMusicList;
+      this.$store.state.myLoveMusicList = myLoveMusicList
     }
 
-    let musicLists = JSON.parse(window.localStorage.getItem("musicLists"));
+    const musicLists = JSON.parse(window.localStorage.getItem('musicLists'))
     if (musicLists) {
-      this.$store.state.musicList = musicLists;
+      this.$store.state.musicList = musicLists
     }
-     //设置初始播放模式；
-    this.$store.commit("chuangePlayMode",1);
+    // 设置初始播放模式；
+    this.$store.commit('chuangePlayMode', 1)
     // this.$store.state.playMode=2;
     // console.log(`设置播放模式为：${this.$store.state.playMode}`)
-    
   },
   mounted: function () {
-    
-    const musicDom = this.$refs.musicDom; //导入audio标签
-    //导入ControlButton
-    const ControlButton=this.$refs.ControlButton;
-    musicDom.volume = this.$store.state.volume;
-    //audio标签重载SRC时，返回歌曲总时长
+    const musicDom = this.$refs.musicDom // 导入audio标签
+    // 导入ControlButton
+    const ControlButton = this.$refs.ControlButton
+    musicDom.volume = this.$store.state.volume
+    // audio标签重载SRC时，返回歌曲总时长
     musicDom.onloadedmetadata = () => {
-      this.$store.commit("chuangeMusicLength", musicDom.duration);
-    };
-    //设置初始状态音量
-    this.chuangeVolume(0.45);
-    //audio标签重每秒更新播放进度
+      this.$store.commit('chuangeMusicLength', musicDom.duration)
+    }
+    // 设置初始状态音量
+    this.chuangeVolume(0.45)
+    // audio标签重每秒更新播放进度
     musicDom.ontimeupdate = () => {
-      this.$store.commit("chuangenusicTime", musicDom.currentTime);
-    };
-    //根据播放模式设置，决定是循序播放(1)、单曲循环()2、乱序播放(3)
+      this.$store.commit('chuangenusicTime', musicDom.currentTime)
+    }
+    // 根据播放模式设置，决定是循序播放(1)、单曲循环()2、乱序播放(3)
     musicDom.onended = () => {
-    musicDom.pause();
-    this.$store.state.playState=false;
-   console.log(`当前播放模式为:${this.$store.state.playMode}`);
+      musicDom.pause()
+      this.$store.state.playState = false
+      console.log(`当前播放模式为:${this.$store.state.playMode}`)
       if (this.$store.state.playMode === 1) {
-        ControlButton.next();
-        return;
+        ControlButton.next()
+        return
       }
       if (this.$store.state.playMode === 2) {
-        musicDom.play();
-        this.$store.state.playState=true;
-        return;
+        musicDom.play()
+        this.$store.state.playState = true
+        return
       }
       if (this.$store.state.playMode === 3) {
         if (this.$store.state.listMode === 1) {
-          this.$store.commit("changeNetWorkIndex", this.playModel(1));
+          this.$store.commit('changeNetWorkIndex', this.playModel(1))
         }
         if (this.$store.state.listMode === 2) {
-          this.$store.commit("changeMyLoveIndex", this.playModel(2));
+          this.$store.commit('changeMyLoveIndex', this.playModel(2))
         }
         if (this.$store.state.listMode === 3) {
-          this.$store.state.collectionIndex = this.playModel(3);
+          this.$store.state.collectionIndex = this.playModel(3)
         }
-        musicDom.load();
-        musicDom.play();
-        this.$store.state.playState=true;
-        this.log();
-        return;
+        musicDom.load()
+        musicDom.play()
+        this.$store.state.playState = true
+        this.log()
       }
-    };
+    }
   },
   beforeUpdate: function () {
-    const musicDom = this.$refs.musicDom;
-    musicDom.volume = this.$store.state.volume;
-  },
-};
+    const musicDom = this.$refs.musicDom
+    musicDom.volume = this.$store.state.volume
+  }
+}
 </script>
 <style>
 * {
   border: 0px;
   padding: 0px;
+}
+.musicBox{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 .musicDom {
   display: none;

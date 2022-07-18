@@ -9,7 +9,7 @@
       </li>
     </transition-group>
     </div>
-    
+
   </div>
 </template>
 

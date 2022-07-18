@@ -4,17 +4,19 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //基本数据示例
-    
+
     // 网络歌曲列表
     networkMusicList: [
       { id: "", musicName: " ", album: " ", writer: " ", src: "" },
+      { id: 149229, musicName: "夜的钢琴曲(五)", album: "夜的钢琴曲 石进原创钢琴曲14首", writer: "石进", src: "https://music.163.com/song/media/outer/url?id=149229.mp3", coverID: 14943,mvid: 0 },
+      { id: 1877978534, musicName: "华散之缘", album: "白鹭之歌《原神》神里绫华", writer: "梨花三音", src: "https://music.163.com/song/media/outer/url?id=1877978534.mp3",coverID: 133200724,mvid: 0 }
     ],
     // 我的喜欢歌曲列表
     myLoveMusicList: [
       { id: "", musicName: " ", album: " ", writer: " ", src: "" },
     ],
     //我的收藏歌曲列表
-    musicList: [{ id:1,name: "我的收藏(默认)", listMusic: [] }],
+    musicList: [{ id: 1, name: "我的收藏(默认)", listMusic: [] }],
 
     inputText: "", //搜索框输入内容
     listMode: 1, //当前歌曲所在歌单状态
@@ -29,46 +31,46 @@ export default new Vuex.Store({
     volume: 0,//歌曲音量
     addMusicListBox: false,//歌单添加框显示状态
 
-    musicslength:60,//搜索歌单默认结果数量
-    limit:30,//默认评论数
+    musicslength: 60,//搜索歌单默认结果数量
+    limit: 30,//默认评论数
 
-    mvUrl:'',//,mv播放地址
-    mvShow:false,//mv播放器遮罩层
+    mvUrl: '',//,mv播放地址
+    mvShow: false,//mv播放器遮罩层
 
-    musicCover:'',//封面
+    musicCover: '',//封面
 
-    canPlay:true,//是否有版权可播放
-   
+    canPlay: true,//是否有版权可播放
+
 
     // 评论区信息
     comment: [],
 
-    lyric:'',//歌词信息
-    lyricShow:false,//歌词显示状态
-    
+    lyric: '',//歌词信息
+    lyricShow: false,//歌词显示状态
 
-    
+
+
   },
   mutations: {
     //给封面地址赋值
-    chuageMusicCover(state,value){
-    state.musicCover=value;
+    chuageMusicCover(state, value) {
+      state.musicCover = value;
     },
     //控制歌词显示
-    chuangelyricShow(state){
-      state.lyricShow=!state.lyricShow;
+    chuangelyricShow(state) {
+      state.lyricShow = !state.lyricShow;
     },
     //改变遮罩层
-    chuangeMvShow:function(state){
-      state.mvShow=!state.mvShow;
+    chuangeMvShow: function (state) {
+      state.mvShow = !state.mvShow;
     },
     //导入歌词
-    chuangeLyric:function(state,value){
-      state.lyric=value;
-     },
+    chuangeLyric: function (state, value) {
+      state.lyric = value;
+    },
     //导入MV地址
-    chuangeMvUrl:function(state,value){
-     state.mvUrl=value;
+    chuangeMvUrl: function (state, value) {
+      state.mvUrl = value;
     },
     //导入网络歌曲列表
     assignment: (state, arr) => {
@@ -100,8 +102,8 @@ export default new Vuex.Store({
     changeNetWorkIndex: function (state, index) {
       state.networkIndex = index;
     },
-     //重置我的喜欢曲库焦点至特定序号
-     changeMyLoveIndex: function (state, index) {
+    //重置我的喜欢曲库焦点至特定序号
+    changeMyLoveIndex: function (state, index) {
       state.myLoveIndex = index;
     },
     //改变歌曲总长度
@@ -159,16 +161,16 @@ export default new Vuex.Store({
       state.listMode = index;
     },
     //改变播放模式
-    chuangePlayMode:function(state,index){
-     state.playMode=index;
+    chuangePlayMode: function (state, index) {
+      state.playMode = index;
     },
     //更新评论
-    chuangeComment:function(state,index){
-    state.comment=index;
+    chuangeComment: function (state, index) {
+      state.comment = index;
     },
-    chuangeCanPlay:function(state,index){
-      state.canPlay=index;
-      },
+    chuangeCanPlay: function (state, index) {
+      state.canPlay = index;
+    },
 
   },
   actions: {},
@@ -204,28 +206,28 @@ export default new Vuex.Store({
       }
       return ids;
     },
-  //我的喜欢曲库歌曲数量（含开头空列表）
-  loveListLength: function (state) {
-    let l = state.myLoveMusicList.length - 1;
-    return l;
-  },
-  //当前歌单模式列表长度
-  nowLength: function (state) {
-    switch (state.listMode) {
-      case 1: return state.networkMusicList.length;
-      case 2: return state.myLoveMusicList.length;
-      case 3: return state.musicList[state.collectionIndex[0]].listMusic.length;
-    }
+    //我的喜欢曲库歌曲数量（含开头空列表）
+    loveListLength: function (state) {
+      let l = state.myLoveMusicList.length - 1;
+      return l;
+    },
+    //当前歌单模式列表长度
+    nowLength: function (state) {
+      switch (state.listMode) {
+        case 1: return state.networkMusicList.length;
+        case 2: return state.myLoveMusicList.length;
+        case 3: return state.musicList[state.collectionIndex[0]].listMusic.length;
+      }
 
-  },
-  //当前焦点歌曲序号map
-  nowIndex: function (state) {
-    switch (state.listMode) {
-      case 1: return state.networkIndex;
-      case 2: return state.myLoveIndex;
-      case 3: return state.collectionIndex[1];
+    },
+    //当前焦点歌曲序号map
+    nowIndex: function (state) {
+      switch (state.listMode) {
+        case 1: return state.networkIndex;
+        case 2: return state.myLoveIndex;
+        case 3: return state.collectionIndex[1];
+      }
     }
-  }
-},
+  },
   modules: {},
 });

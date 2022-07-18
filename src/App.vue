@@ -1,16 +1,14 @@
 <template>
-  <div id="app">
+  <div class="app">
     <!-- <div class="back"></div> -->
-    <div class="background" :class="{'backgroundActive':this.$store.state.mvShow}"></div>
-    <div id="nav">
-      <router-link to="/">播放器</router-link> |
-      <router-link to="/about">备注</router-link>
+    <div class="backBox">
+       <div class="background" :class="{'backgroundActive':this.$store.state.mvShow}"></div>
     </div>
     <router-view class="router" />
     <div class="boxBox">
       <VideoBox class="videoBox"></VideoBox>
     </div>
-    
+
   </div>
 </template>
 <script>
@@ -26,39 +24,59 @@ export default {
 };
 </script>
 <style>
-.router {
-  margin: 10px auto;
+html,body{
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  height: 100vh;
+
 }
+/* .router {
+} */
 /* .boxBox {
   left: 50%;
   transform: translate(-50%);
   position: absolute;
   top:50px;
 } */
+.backBox{
+width: 100%;
+height: 100%;
+/* perspective: 40px; */
+position: absolute;
+top: 0px;
+left: 0px;
+overflow: hidden;
+
+}
 .background{
-  position:fixed;
+  position:absolute;
   width: 100vw;
   height:100vh;
-  top: 0;
-  left: 0;
-  background: url("./assets/背景1.png") no-repeat;
-   filter: blur(15px);
-   transition: all 0.5s ease;
+  top: 50%;
+  left: 50%;
+
+  background: url("https://aqbyzdq.oss-cn-guangzhou.aliyuncs.com/ayaka/%E8%83%8C%E6%99%AF1.png") no-repeat;
+  filter: blur(5px);
+  transition: all 0.3s ease;
   object-fit: cover;
-  /* transform: translateZ(10px); */
+  transform: translate3D(-50%,-50%,0px);
 
 }
 .backgroundActive{
-  background: url("./assets/背景2.png") no-repeat;
+  background: url("https://aqbyzdq.oss-cn-guangzhou.aliyuncs.com/ayaka/%E8%83%8C%E6%99%AF2.png") no-repeat;
 }
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+.app {
+  /* font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
   text-align: center;
   color: #2c3e50;
   position: relative;
   /* perspective: 20px; */
+  height: 100%;
+  width: 100%;
 }
 
 #nav {

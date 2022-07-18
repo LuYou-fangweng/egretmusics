@@ -4,6 +4,7 @@
     <input
       type="text"
       class="textInput"
+      placeholder="请在此搜索想要寻找的音乐"
       v-model="searchText"
       @keyup.enter="$_searchMusic"
     />
@@ -45,7 +46,11 @@ export default {
           // 对返回数据进行提取，选取ID、歌名、专辑、作者、URL信息。S
           // let t= response.data.result.songs;
           // console.log(t);
-
+        if(response.status!==200){
+          alert(response.mes);
+          return;
+        }
+        console.log(response);
           const searchMusicList = response.data.result.songs.map((item) => {
             let cname=item.artists.map(function(itemw){return itemw.name}).join(" ");
             const { name: musicName, id, album,mvid } = item;
@@ -61,7 +66,7 @@ export default {
           });
           searchMusicList.unshift( { id: "", musicName: "", album: "", writer: "", src: "" ,mvid:'',coverID:''});
           //若歌曲焦点在网络歌单而且在播放时，暂停播放
-          
+
           them.$store.commit("assignment", searchMusicList);
           // console.log(them.$store.state.networkMusicList);
           //将网络歌单焦点设置为1
@@ -70,7 +75,7 @@ export default {
             them.$emit("pause");
             them.$emit("changeSRC");
           }
-          
+
         })
         .catch(function (err) {
           console.log("网络请求出错！错误详情为：");

@@ -1,6 +1,6 @@
 <template>
   <div class="vidioBox" v-show="this.$store.state.mvShow">
-    
+
     <div class="mask" @click="chuangeShow"></div>
     <video
       id="music"
@@ -47,7 +47,7 @@ export default {
 }
 .mask {
   width: 100vw;
-  height: 80vh;
+  height: 90vh;
   position: fixed;
   top: 50%;
   left: 0%;
