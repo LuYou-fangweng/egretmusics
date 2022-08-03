@@ -30,8 +30,12 @@ html,body{
   margin: 0px;
   width: 100vw;
   height: 100vh;
+  min-width: 1300px;
+  min-height: 700px;
 
 }
+footer { max-width: 100%; }
+.world .centent .box { max-width: 100%; }
 /* .router {
 } */
 /* .boxBox {
@@ -52,8 +56,8 @@ overflow: hidden;
 }
 .background{
   position:absolute;
-  width: 100vw;
-  height:100vh;
+  width: 100%;
+  height:100%;
   top: 50%;
   left: 50%;
 
